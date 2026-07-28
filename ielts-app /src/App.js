@@ -55,7 +55,9 @@ export default function App() {
   };
 
   const isTeacher = userRole === 'teacher';
-  const effectiveAdmin = isAdmin || isTeacher;
+  // Teacher faqat homework yuklaydi, qolgan hamma narsa faqat admin
+  const effectiveAdmin = isAdmin; // Teacher endi admin emas
+  const canUploadHomework = isTeacher || isAdmin;
 
   const NAV = [
     { id:'vocab', label:'📚', full:'Vocabulary' },
@@ -102,11 +104,11 @@ export default function App() {
       </header>
 
       <main style={{ flex:1 }}>
-        {page==='vocab' && <VocabPage isAdmin={effectiveAdmin} />}
-        {page==='listening' && <TestPage type="listening" isTeacher={effectiveAdmin} user={user} userProfile={userProfile} />}
-        {page==='reading' && <TestPage type="reading" isTeacher={effectiveAdmin} user={user} userProfile={userProfile} />}
-        {page==='writing' && <StoryPage isAdmin={effectiveAdmin} user={user} userProfile={userProfile} section="writing" />}
-        {page==='homework' && <HomeworkPage isTeacher={isTeacher||effectiveAdmin} user={user} userProfile={userProfile} />}
+        {page==='vocab' && <VocabPage isAdmin={isAdmin} />}
+        {page==='listening' && <TestPage type="listening" isTeacher={isAdmin} user={user} userProfile={userProfile} />}
+        {page==='reading' && <TestPage type="reading" isTeacher={isAdmin} user={user} userProfile={userProfile} />}
+        {page==='writing' && <StoryPage isAdmin={isAdmin} user={user} userProfile={userProfile} section="writing" />}
+        {page==='homework' && <HomeworkPage isTeacher={canUploadHomework} user={user} userProfile={userProfile} />}
         {page==='profile' && <ProfilePage user={user} userProfile={userProfile} />}
       </main>
 
