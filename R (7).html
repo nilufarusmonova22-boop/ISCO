@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Reading – Roman River, Playful Children &amp; Tourism</title>
+    <style>
+        :root {
+            --bg: #ffffff; --bg-secondary: #f8f9fa; --bg-tertiary: #f1f2ec;
+            --text: #1a1a1a; --text-muted: #555; --text-light: #888;
+            --border: #e0e0e0; --border-medium: #ccc;
+            --header-bg: #ffffff; --panel-bg: #ffffff; --nav-bg: #ffffff;
+            --input-bg: #ffffff; --example-bg: #f9f9f9; --modal-bg: #ffffff;
+            --timer-color: #333; --resizer-bg: #f0f0f0;
+            --active-blue: #4a90e2;
+            --correct-bg: #e9f7ef; --incorrect-bg: #f8d7da;
+            --correct-border: #28a745; --incorrect-border: #dc3545;
+            --highlight-yellow: #ffeb3b; --highlight-green: #a5d6a7;
+            --subq-bg: #ffffff; --subq-border: #ccc; --subq-text: #333;
+            --footer-btn-bg: #f0f0f0; --passage-title: #2c3e50;
+            --toolbar-bg: #1a1a2e; --toolbar-shadow: 0 4px 20px rgba(0,0,0,0.25);
+            --font-size-base: 16px;
+        }
+        body.night-mode {
+            --bg:#121212;--bg-secondary:#1e1e1e;--bg-tertiary:#252525;
+            --text:#e0e0e0;--text-muted:#aaa;--text-light:#777;
+            --border:#333;--border-medium:#444;
+            --header-bg:#1a1a1a;--panel-bg:#1a1a1a;--nav-bg:#1a1a1a;
+            --input-bg:#252525;--example-bg:#252525;--modal-bg:#1e1e1e;
+            --timer-color:#e0e0e0;--resizer-bg:#2a2a2a;--active-blue:#64b5f6;
+            --correct-bg:#1a3a2a;--incorrect-bg:#3a1a1a;
+            --correct-border:#4caf50;--incorrect-border:#f44336;
+            --highlight-yellow:#f9a825;--highlight-green:#388e3c;
+            --subq-bg:#252525;--subq-border:#444;--subq-text:#ccc;
+            --footer-btn-bg:#2a2a2a;--passage-title:#90caf9;
+            --toolbar-bg:#0d0d1a;--toolbar-shadow:0 4px 20px rgba(0,0,0,0.6);
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:Georgia,'Times New Roman',serif;background-color:var(--bg);color:var(--text);line-height:1.6;font-size:var(--font-size-base);transition:background-color .3s,color .3s;}
+        .header{background-color:var(--header-bg);padding:10px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:fixed;top:0;left:0;right:0;z-index:100;height:56px;gap:8px;}
+        .header-left{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;}
+        .timer-container{display:flex;color:var(--timer-color);font-size:15px;font-weight:600;align-items:center;font-family:'Courier New',monospace;}
+        .timer-controls{display:flex;align-items:center;gap:5px;margin-left:8px;}
+        .timer-controls button{background:var(--footer-btn-bg);border:1px solid var(--border-medium);border-radius:50%;padding:0;cursor:pointer;width:28px;height:28px;display:flex;align-items:center;justify-content:center;}
+        .timer-controls button svg{width:18px;height:18px;fill:var(--timer-color);}
+        .header-btn{background:var(--footer-btn-bg);border:1px solid var(--border-medium);border-radius:16px;padding:4px 10px;cursor:pointer;font-size:12px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:4px;white-space:nowrap;font-family:Arial,sans-serif;}
+        .zoom-controls{display:flex;align-items:center;gap:3px;background:var(--footer-btn-bg);border:1px solid var(--border-medium);border-radius:16px;padding:2px 8px;}
+        .zoom-btn{background:none;border:none;cursor:pointer;color:var(--text);font-size:16px;font-weight:700;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:4px;}
+        .zoom-label{font-size:12px;font-weight:600;color:var(--text-muted);min-width:34px;text-align:center;font-family:Arial,sans-serif;}
+        .telegram-link{color:#0088cc;text-decoration:none;font-weight:700;font-size:13px;display:flex;align-items:center;gap:5px;font-family:Arial,sans-serif;white-space:nowrap;}
+        .promo-pill{background:linear-gradient(90deg,#4facfe 0%,#7367f0 100%);color:#fff;text-decoration:none;font-weight:700;font-size:13px;padding:9px 20px;border-radius:20px;white-space:nowrap;font-family:Arial,sans-serif;box-shadow:0 2px 8px rgba(115,103,240,.35);}
+        .promo-pill:hover{opacity:.92;}
+        .header-center{display:flex;justify-content:center;flex:1;}
+        .main-container{margin-top:56px;display:flex;flex-direction:column;background:var(--bg);height:calc(100vh - 56px);}
+        .panels-container{display:flex;flex:1;overflow:hidden;}
+        .passage-panel{flex:1;padding:20px 24px 110px;overflow-y:auto;min-width:200px;background:var(--panel-bg);}
+        .questions-panel{flex:1;padding:20px 20px 110px;overflow-y:auto;min-width:200px;border-left:1px solid var(--border);background:var(--panel-bg);font-family:Arial,sans-serif;}
+        .resizer{width:8px;cursor:col-resize;background-color:var(--resizer-bg);background-image:url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="30" viewBox="0 0 8 30"><path d="M3 11h2v2H3zM3 15h2v2H3zM3 19h2v2H3z" fill="%23888"/></svg>');background-repeat:no-repeat;background-position:center;flex-shrink:0;}
+        .reading-passage h4{font-family:Georgia,serif;font-size:1.25em;font-weight:700;color:var(--passage-title);line-height:1.4;margin-bottom:6px;text-align:center;border-bottom:2px solid var(--active-blue);padding-bottom:8px;}
+        .reading-passage .passage-subtitle{text-align:center;font-style:italic;font-size:.95em;color:var(--text-muted);margin-bottom:18px;}
+        .reading-passage p{margin-bottom:1.1em;color:var(--text);line-height:1.7;}
+        .reading-passage .para-label{font-weight:700;}
+        .part-header{background-color:var(--bg-tertiary);padding:12px 18px;border:1px solid var(--border);margin:8px 16px;border-radius:5px;color:var(--text);font-family:Arial,sans-serif;}
+        .part-header p{margin:0;font-size:14px;}
+        .part-header p:first-child{margin-bottom:3px;}
+        .question{margin-bottom:36px;color:var(--text);font-size:.95em;}
+        .question p{margin-bottom:8px;color:var(--text);}
+        .question-prompt{margin-bottom:16px;}
+        .question ul{list-style:none;padding-left:0;}
+        .question ul li{margin-bottom:4px;color:var(--text);}
+        .answer-input{border:1px solid var(--border-medium);border-radius:4px;background-color:var(--input-bg);color:var(--text);padding:2px 6px;font-size:.9em;font-family:Arial,sans-serif;text-align:center;margin:0 4px;height:26px;width:140px;transition:border-color .3s,box-shadow .3s,background-color .3s;}
+        .answer-input.active-input{border-color:var(--active-blue);box-shadow:0 0 3px 1px rgba(74,144,226,.5);}
+        .answer-input::placeholder{color:#bbb;font-weight:600;text-align:center;}
+        .answer-input.correct{border-color:var(--correct-border);background-color:var(--correct-bg);}
+        .answer-input.incorrect{border-color:var(--incorrect-border);background-color:var(--incorrect-bg);color:var(--incorrect-border);}
+        .tf-question{margin-bottom:20px;border-radius:4px;color:var(--text);}
+        .tf-question-line{display:flex;align-items:flex-start;margin-bottom:10px;padding:4px 0;border-radius:4px;}
+        .tf-question-number{border:2px solid var(--border-medium);padding:1px 7px;margin-right:10px;border-radius:3px;font-weight:700;color:var(--text);display:inline-block;flex-shrink:0;}
+        .tf-question-text{padding-top:2px;color:var(--text);}
+        .tf-options{padding-left:4px;}
+        .tf-option{display:flex;align-items:center;margin-bottom:8px;cursor:pointer;color:var(--text);}
+        .tf-option input[type="radio"]{margin-right:8px;transform:scale(1.2);accent-color:var(--active-blue);}
+        .tf-question.correct .tf-question-line{background-color:var(--correct-bg);}
+        .tf-question.incorrect .tf-question-line{background-color:var(--incorrect-bg);}
+        .multi-choice-question{margin-bottom:18px;padding:8px;border-radius:4px;border:2px solid transparent;color:var(--text);}
+        .multi-choice-option{margin-bottom:8px;padding:5px;border-radius:4px;color:var(--text);}
+        .multi-choice-option label{display:flex;align-items:flex-start;cursor:pointer;font-size:.95em;color:var(--text);}
+        .multi-choice-option input[type="radio"]{margin-right:10px;margin-top:3px;transform:scale(1.2);accent-color:var(--active-blue);flex-shrink:0;}
+        .multi-choice-option.correct{background-color:var(--correct-bg);}
+        .multi-choice-option.incorrect{background-color:var(--incorrect-bg);}
+        .matching-form-container{margin-top:14px;}
+        .matching-form-row{display:flex;align-items:center;margin-bottom:12px;gap:10px;}
+        .matching-form-label{flex:1;color:var(--text);font-size:.9em;}
+        .matching-form-row.correct{background-color:var(--correct-bg);border-left:3px solid var(--correct-border);padding-left:8px;border-radius:4px;}
+        .matching-form-row.incorrect{background-color:var(--incorrect-bg);border-left:3px solid var(--incorrect-border);padding-left:8px;border-radius:4px;}
+        .summary-text{margin-top:12px;font-size:.95em;line-height:2.4;color:var(--text);}
+        .summary-box{border:1px solid var(--border);background:var(--example-bg);padding:14px 16px;border-radius:5px;margin:12px 0;}
+        .summary-box h5{font-weight:700;margin-bottom:10px;color:var(--passage-title);font-family:Georgia,serif;}
+        .summary-box .sub-h{font-weight:700;margin:10px 0 4px;color:var(--text);}
+        .summary-box ul{list-style:disc;padding-left:22px;margin-bottom:8px;}
+        .summary-box ul li{margin-bottom:10px;line-height:1.8;}
+        .example-box{border:1px solid var(--border);background-color:var(--example-bg);padding:12px 16px;border-radius:5px;margin:14px 0;color:var(--text);font-size:.9em;}
+        .correct-answer-display{font-weight:700;color:#28a745;margin-left:8px;font-size:.85em;}
+        .correct-answer-highlight{background-color:var(--correct-bg)!important;border:1px solid var(--correct-border)!important;border-radius:4px;padding:2px 4px;}
+        .tf-option.correct-answer-highlight,.multi-choice-option.correct-answer-highlight{background-color:var(--correct-bg)!important;border:1px solid var(--correct-border)!important;border-radius:4px;padding:4px;}
+        .nav-arrows{position:fixed;bottom:90px;right:16px;display:flex;gap:4px;z-index:101;}
+        .nav-arrow{width:44px;height:44px;background:#333;color:white;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;border-radius:4px;}
+        body.night-mode .nav-arrow{background:#444;}
+        .nav-arrow:hover{background:#555;}
+        .nav-arrow:disabled{background:#ccc;cursor:not-allowed;}
+        .nav-row{position:fixed;bottom:0;left:0;right:0;background:var(--nav-bg);padding:0;display:flex;align-items:center;height:74px;z-index:100;border-top:1px solid var(--border);overflow-x:auto;font-family:Arial,sans-serif;}
+        .footer__questionWrapper___1tZ46{display:flex;align-items:center;margin-right:12px;flex-shrink:0;}
+        .footer__questionNo___3WNct{background:none;border:none;padding:8px 12px;font-size:14px;font-weight:700;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:4px;border-radius:4px;}
+        .footer__questionNo___3WNct:hover{background-color:var(--bg-secondary);}
+        .section-prefix{font-size:13px;}
+        .sectionNr{font-size:14px;font-weight:800;}
+        .attemptedCount{font-size:12px;color:var(--text-muted);margin-left:4px;font-weight:400;}
+        .footer__subquestionWrapper___9GgoP{display:none;gap:2px;margin-left:6px;flex-wrap:wrap;}
+        .footer__questionWrapper___1tZ46.selected .footer__subquestionWrapper___9GgoP{display:flex;}
+        .footer__questionWrapper___1tZ46.selected .attemptedCount{display:none;}
+        .subQuestion{width:30px;height:30px;border:1px solid var(--subq-border);background:var(--subq-bg);color:var(--subq-text);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:3px;transition:all .2s;}
+        .subQuestion.answered{background-color:#6c8ebf;color:white;border-color:#5a7aad;}
+        .subQuestion.correct{background-color:#28a745;color:white;border-color:#28a745;}
+        .subQuestion.incorrect{background-color:#dc3545;color:white;border-color:#dc3545;}
+        .subQuestion:hover{background-color:var(--bg-secondary);}
+        .subQuestion.active{background-color:var(--active-blue);color:white;border-color:var(--active-blue);}
+        .footer__deliverButton___3FM07{margin-left:auto;margin-right:16px;flex-shrink:0;background-color:#4a90e2;color:white;border:none;padding:10px 18px;border-radius:5px;font-size:14px;font-weight:700;cursor:pointer;min-width:140px;justify-content:center;display:flex;align-items:center;gap:6px;}
+        .footer__deliverButton___3FM07:hover{background-color:#357abd;}
+        .footer__deliverButton___3FM07:disabled{background:var(--bg-secondary);color:var(--text-muted);cursor:not-allowed;}
+        .hidden{display:none!important;}
+        .highlight-toolbar{position:fixed;display:none;background:var(--toolbar-bg);border-radius:8px;box-shadow:var(--toolbar-shadow);z-index:2000;padding:5px 7px;gap:3px;align-items:center;border:1px solid rgba(255,255,255,.12);}
+        .highlight-toolbar.visible{display:flex;}
+        .toolbar-btn{display:inline-flex;align-items:center;justify-content:center;gap:3px;padding:5px 9px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;white-space:nowrap;font-family:Arial,sans-serif;}
+        .toolbar-btn.btn-yellow{background:#f9c000;color:#1a1a1a;}
+        .toolbar-btn.btn-green{background:#43a047;color:#fff;}
+        .toolbar-btn.btn-clear{background:#757575;color:#fff;}
+        .toolbar-btn.btn-clear-all{background:#c0392b;color:#fff;}
+        .toolbar-sep{width:1px;height:20px;background:rgba(255,255,255,.2);margin:0 2px;}
+        .highlight{background-color:var(--highlight-yellow);border-radius:2px;cursor:pointer;}
+        .highlight.hl-green{background-color:var(--highlight-green);}
+        body.night-mode .highlight{background-color:#f9a825;color:#000;}
+        body.night-mode .highlight.hl-green{background-color:#388e3c;color:#fff;}
+        .active-question{outline:2px solid var(--active-blue);border-radius:4px;}
+        .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,.75);z-index:2000;display:flex;justify-content:center;align-items:center;}
+        .modal-overlay.hidden{display:none;}
+        .modal-content{background:var(--modal-bg);padding:24px;border-radius:12px;width:92%;max-width:600px;max-height:82vh;display:flex;flex-direction:column;position:relative;border:1px solid var(--border);}
+        .modal-close-btn{position:absolute;top:10px;right:14px;background:none;border:none;font-size:26px;cursor:pointer;color:var(--text-muted);}
+        .modal-content h2{text-align:center;margin-bottom:14px;color:var(--text);font-family:Georgia,serif;}
+        .results-summary{display:flex;justify-content:space-around;margin-bottom:16px;font-size:18px;font-weight:700;text-align:center;border-bottom:1px solid var(--border);padding-bottom:14px;color:var(--text);font-family:Arial,sans-serif;}
+        .results-details-container{overflow-y:auto;padding-right:8px;}
+        .result-row{display:grid;grid-template-columns:40px 1fr 1fr;gap:12px;padding:7px 5px;border-bottom:1px solid var(--border);font-size:14px;color:var(--text);font-family:Arial,sans-serif;}
+        .result-row.incorrect{background-color:var(--incorrect-bg);}
+        .result-row .q-num{font-weight:700;}
+        .result-row .user-ans{color:var(--text-muted);}
+        .result-row .correct-ans{color:var(--correct-border);font-weight:600;}
+        select.answer-input option{background:var(--input-bg);color:var(--text);}
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="header-left">
+        <div class="timer-container">
+            <span class="timer-display">60:00</span>
+            <div class="timer-controls">
+                <button id="timer-toggle-btn" title="Pause/Resume">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </button>
+                <button id="timer-reset-btn" title="Reset">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                </button>
+            </div>
+        </div>
+        <div class="zoom-controls">
+            <button class="zoom-btn" id="zoom-out-btn">−</button>
+            <span class="zoom-label" id="zoom-label">100%</span>
+            <button class="zoom-btn" id="zoom-in-btn">+</button>
+        </div>
+        <button id="night-mode-btn" class="header-btn">🌙 Night</button>
+    </div>
+    <div class="header-center">
+        <a href="https://t.me/ieltsmaterials_full" target="_blank" rel="noopener" class="promo-pill">For More Authentic tests you need to buy Premium Service</a>
+    </div>
+    <a href="https://t.me/ieltsmaterials_full" target="_blank" rel="noopener" class="telegram-link">📚 IELTS CDI Materials</a>
+</div>
+
+<div class="main-container">
+    <div id="passage-header-container">
+        <div id="part-header-1" class="part-header">
+            <p><strong>Part 1</strong> &nbsp;–&nbsp; A river reveals its Roman past</p>
+            <p>You should spend about 20 minutes on Questions 1–13.</p>
+        </div>
+        <div id="part-header-2" class="part-header hidden">
+            <p><strong>Part 2</strong> &nbsp;–&nbsp; The importance of being playful</p>
+            <p>You should spend about 20 minutes on Questions 14–26.</p>
+        </div>
+        <div id="part-header-3" class="part-header hidden">
+            <p><strong>Part 3</strong> &nbsp;–&nbsp; The contradictions of tourism</p>
+            <p>You should spend about 20 minutes on Questions 27–40.</p>
+        </div>
+    </div>
+    <div class="panels-container">
+        <div class="passage-panel" id="passage-panel">
+
+            <!-- PASSAGE 1 -->
+            <div id="passage-text-1" class="reading-passage">
+                <h4>A river reveals its Roman past</h4>
+                <p>2,000 years ago the town of Arles, in what is now south-western France, was a busy gateway to the area of the Roman Empire known as Gaul. Goods from all over the Mediterranean were transferred there to barges – long, shallow riverboats – then pulled up the Rhone river to supply the northern half of the great empire. Today, Arles is a small, quiet place, and the Rhone is polluted and mostly ignored.</p>
+                <p>In 1986, a friend persuaded Luc Long, a keen diver, to dive for the first time in his home river. Long reluctantly agreed. The two men entered the river on a chilly November morning, when the water was around 8°C, thick, cloudy and foul-smelling. At a depth of about six metres, Long saw a sunken truck. To his surprise, he discovered an ancient Roman jar known as an amphora on the driver's seat. These containers were used throughout the Roman Empire to transport olive oil, fish sauce, and other products. When empty, they would simply be discarded. Within a short time the divers had located dozens more amphorae, and he has been mapping this Roman rubbish dump ever since.</p>
+                <p>For the first 20 years or so, no one paid much attention to what Long was doing. In 2004, one of his colleagues came across a 34-metre-long Roman barge. Long doubted that there would ever be enough money available to raise it. In 2007, Long handed over the study of this barge to a young archaeologist, Sabrina Marlier, and concentrated on a survey of the rest of the dump, around 50 metres upstream. This was where he started finding pieces of the Roman town of Arles, including statues. Word began to leak out. The French customs police warned Long that antiquities thieves might be watching his operation. So when a rare marble bust of the Roman emperor Caesar was found, Long hid it in a friend's garage.</p>
+                <p>Before the diving season was over, divers had discovered the rare marble bust of the Roman emperor Caesar. News of the find spread around the world. 'The exhibition's success was astonishing,' said Claude Sintes, director of Arles's local antiquities museum, where the exhibition was held. 'When a modest town like ours got 400,000 visitors, the politicians understood that the economic return was strong.' By the autumn of 2010, the Caesar exhibition was nearing its end, and the European Union had designated the region around Arles a 2013 European Capital of Culture. Suddenly nine million euros became available to build a new wing for the museum and put a Roman barge into it. There was just one problem. The project would need to be completed by 2013. That meant the barge needed to be extracted during the one diving season in 2011. This was because although the wood of the boat had suffered no microbial decay, water had filled its cells, leaving the whole structure soft and spongy. If that water were to evaporate, the boat would collapse. The solution was to leave the boat in water, gradually infusing it with a polymer before extracting the water. The process would take nearly two years.</p>
+                <p>So there was only one diving season to extract the boat from the Rhone. 'We all thought the deadline was impossible,' said Benoit Poinard, who led the diving team. Normally, Poinard explained, the Rhone is safe for diving only from late June to October; otherwise the current is too strong. Three or four months would not be enough to excavate Arles-Rhone 3. Then 2011 arrived. It hardly snowed in the Alps that winter and that spring it barely rained. The Rhone's current was so gentle that the team got in the water by early May. The team worked straight into November, losing only a single week to bad weather and completed the job. 'Two hours after we finished,' Poinard said, 'the Rhone became undiveable for the whole winter.'</p>
+                <p>When Arles-Rhone 3 sank, it was carrying 33 tons of stone for building work. It had come from a quarry just north of Arles, and was probably heading towards a construction site further down the river. The boat was pointed upstream, though, rather than downstream, indicating it had probably been moored at the quay when it sank. A flash flood had probably swamped it. As soon as the flood subsided, the barge would have been covered in a coating of fine clay no more than 20 cm thick. This was where the archaeologists discovered the personal effects the crew had left on the boat, including cooking utensils and plates. When the restorers were taking the boat apart, they found a silver coin dated to 30 BCE – the year before the battle of Actium – under the floorboards. They guessed someone had left it there to bring good luck. And it did – 2,000 years later, Arles-Rhone 3 was able to take its place in the new wing of the museum, on schedule, just over two years after re-emerging from the cloudy depths of the Rhone.</p>
+            </div>
+
+            <!-- PASSAGE 2 -->
+            <div id="passage-text-2" class="reading-passage hidden">
+                <h4>The importance of being playful</h4>
+                <p class="passage-subtitle">Free play makes us better adjusted, smarter and less stressed</p>
+                <p><span class="para-label">A</span>&nbsp;&nbsp;While it has long been recognized that play affords benefits that last through adulthood, psychologists in the US are now becoming concerned that lack of play could actually be harming their country's kids. In the past, few youngsters grew up without ample free-play time. But youngsters' leisure hours are now filled with structured activities such as music lessons and sports. Kids play soccer, Scrabble and saxophone – so why are experts worried that these activities are eating into free play? Most games are fun and sources of learning experiences – fostering group cohesion, for instance, says educational psychologist Anthony Pellegrini. But, Pellegrini explains, 'games have predetermined rules – set up in advance and followed. Play, on the other hand, does not have rules, so affords more creative responses. Children initiate and create free play, and use their imagination to try out new activities and roles.'</p>
+                <p><span class="para-label">B</span>&nbsp;&nbsp;Perhaps most crucially, play helps us develop strong social skills. 'You don't become socially competent via teachers telling you how to behave,' Pellegrini says. 'Kids learn those skills by interacting with peers, learning what is and isn't acceptable. They want this thing to keep going, so they're willing to "go the extra mile" to accommodate their playmates' desires.' Keeping things friendly requires communication – arguably the most valuable social skill of all. Play among peers is the most important in this regard. Studies show that children use more sophisticated language when playing with other children than when playing with adults. In pretend play, for instance, 'they have to communicate about something that's not physically present, so they have to use complicated language to communicate what it is that they're trying to say,' Pellegrini explains.</p>
+                <p><span class="para-label">C</span>&nbsp;&nbsp;If play helps children become socialized, then a lack of play should impede social development – and research suggests that it does. A study of children in Michigan revealed that kids who enrolled in play-oriented preschools are more socially adjusted later in life – and less likely to commit a felony or be suspended from work – than are kids who attended play-free preschools where they were constantly instructed by teachers.</p>
+                <p><span class="para-label">D</span>&nbsp;&nbsp;A 2003 study even suggests that play promotes emotional and social development in animals. Researchers allowed thirteen control rats to play freely with companions for three and a half days, and kept fourteen others isolated for the same period. Examination revealed that the brains of the rats which had played contained much higher levels of BDNF – a protein that stimulates the growth of new neurons – than those of the animals that had not. 'I think play is the major mechanism whereby higher regions of the brain get socialized,' says neuroscientist Jaak Panksepp, who co-authored the study.</p>
+                <p><span class="para-label">E</span>&nbsp;&nbsp;Research also suggests that imaginative play is critical for children's emotional health, as it enables them to work through anxiety. In a 1984 study, researchers assessed the anxiety levels of seventy-four children on their first day of preschool. They labeled each child as either 'anxious' or 'not anxious', then randomly split the kids into groups. Half were escorted to rooms full of toys, where they played for 15 minutes; the other half listened to a teacher tell a story for 15 minutes. Afterward, the anxiety levels of the anxious kids who had played had dropped by more than twice as much compared with the anxious kids who had listened to the story.</p>
+                <p><span class="para-label">F</span>&nbsp;&nbsp;Results of animal studies support these views. In 2008, neuroscientist Stephen Sivy put rats into a chamber and exposed them to a collar previously worn by a cat, making them visibly anxious. Later, the chamber was cleaned to remove the cat odor, and the rats were put back without the collar. They immediately became anxious again, probably because they associated the space with the cat. The researchers then introduced another rat – one that had never been exposed to the collar and was not afraid – and it began playing with one of the rats. 'Shortly thereafter, the first rat relaxed and became calm,' says Sivy, 'suggesting that play helped lessen its anxiety.'</p>
+                <p><span class="para-label">G</span>&nbsp;&nbsp;Play even appears to make kids smarter. In a classic study, researchers told a group of preschool children to play freely with some common objects such as paper towels, a screwdriver, a wooden board and paper clips. Another group was asked to imitate an experimenter using the objects in common ways. A third set was told to sit and draw whatever they wanted, without seeing the objects. After 10 minutes, the researchers asked the children to come up with ideas for how one of the objects could be used. The kids who had played with the objects named, on average, three times as many nonstandard, creative uses for the objects than those in either of the other two groups did, suggesting that play fosters imaginative thinking.</p>
+                <p><span class="para-label">H</span>&nbsp;&nbsp;A later animal study produced similar results. Experimenters isolated young rats during the development period when they would have most frequently played. The researchers taught these rats, and a group that had been allowed to play without constraints, to pull a rubber ball out of the way to get a food treat. A few days later they switched the setup so the rats would have to push the same ball to get the treat. Compared with the isolated rats, the ones which had played proved to be far more adept at solving problems. 'Play is like a kaleidoscope,' says evolutionary biologist Marc Bekoff, 'in that it is random and creative. It encourages flexibility and creativity that may, in the future, be advantageous in unexpected situations or new environments. And in the absence of play, children miss vital learning experiences.'</p>
+            </div>
+
+            <!-- PASSAGE 3 -->
+            <div id="passage-text-3" class="reading-passage hidden">
+                <h4>The contradictions of tourism</h4>
+                <p class="passage-subtitle">Tourism may bring benefits to a society but its effects are not always straightforward.</p>
+                <p>International tourism presents itself as straightforward, passive and benign, yet it is complex, interesting and important, full of contradictions and depths. It has enormous growth potential; almost every country desires an expansion in this sector. Yet whether and how to grow is not nearly as straightforward as one might hope.</p>
+                <p>Tourism can provide the ideal export for developing countries, which can capitalize on their unique cultures and natural environments. However, to do this they need to have features such as airports, hotels, sanitation facilities, roads and medical facilities. A government can build these itself, using revenue from local taxes or getting finance from foreign lenders. Alternatively, the government may attract foreign investment, allowing others to pay for the building, thus relieving itself of providing capital but forgoing profits.</p>
+                <p>Tourism is, however, a risky investment. It can gradually decline as a resort becomes seen as outdated, or it can be destroyed overnight by a single hurricane, or a political emergency. Even when successful, countries and localities are faced with a dilemma: keep it within limits, or extend its benefits but also deepen dependence on a single, fickle industry.</p>
+                <p>By definition, tourists travel to see and knowingly to encounter the different, the original, the authentic. In this increasingly global world, what they want is regional and unique. But only through artifice can the tourist demand for authenticity be met. An event such as a festival or ceremony needs to be brought to their attention and its importance and unique nature elaborated to them. Natural sites, too, need to be presented if they are to be regarded as noteworthy – gates, permits, and notices are required to set them apart from the mundane. Complicated framing and staging allows tourists to recognize, by sight, 'the actual thing'.</p>
+                <p>Tourism places a premium on the parts of a culture that are visible, such as handicrafts and costume, and disregards those that are not, like the rules governing seating on a bus, attitudes to the elderly, or appropriate ways of addressing family members; in this way, tourism favors what can be commodified. Yet commodities can be produced most efficiently using industrial machinery to take advantage of economies of scale, an option closed to village artisans. This alienates the producers from what is being produced, and means the product no longer has any personal meaning to them.</p>
+                <p>In addition, cultural idiosyncrasies and natural spectacles change over time. Tourists can't be attracted, however, to an unstable and ambiguous culture, or to a natural site that is in the process of transforming itself. As a consequence, efforts are made to fix and standardize: folk dances, tortilla-making, peace pipes, bird habitats and the course of the Amazon have all been bound and defined. Had they not been fixed, however, they would not be accessible.</p>
+                <p>Tourism also promotes an external orientation. Like other exports, the 'tourism experience' is produced by local people, and consumed by foreigners. To obtain loans and ultimately create revenue, a government (of whatever size) has to please outside investors and potential travelers. In these ways, tourism can result in a political system becoming more authoritarian and giving less consideration to the needs of individuals within the country.</p>
+                <p>In recent years, with increased awareness of some of these dangers, the phenomenon of ecotourism has developed. This has been seen as a way to prevent and reverse the environmental degradation resulting from tourism as well as from general human activity. Ecotourists distance themselves from mainstream hotel tourists, and also from adventure tourists like those who have, for example, left rubbish at the base of Mount Everest in Nepal. They want to do things like sleep in tents on platforms in tropical rainforests, swim among the fish on coral reefs, or walk over a tree canopy on a net bridge. They value the ecosystem as it is and are willing to pay for its preservation. In this way, they create an incentive for local people to refrain from using natural resources for short-term gain.</p>
+                <p>However, what is fortunate for the birds is not always so fortunate for the local people. In order to be environmentally sustainable, ecotourists have to be few in number. The economies of scale that allow tourism to be profitable cannot operate in a small bush camp. Camping doesn't generate much revenue. Ecotourism proves that tourism does not have to be in conflict with environmental preservation. Unfortunately, it also proves that the realm in which the environment and the economy can be mutually supporting is tiny.</p>
+                <p>Furthermore, Westerners' interest in biodiversity often means that the tourist wants to listen to a parrot, not a local elder, and that dollars bypass beggars on their way to support trees. Thus ecotourists' environmental awareness can stand in contrast to their indifference to the local human community. Tourism always contains a message: this is what we value, this is what we don't.</p>
+            </div>
+        </div>
+
+        <div class="resizer" id="resizer"></div>
+
+        <div class="questions-panel" id="questions-panel">
+
+            <!-- ═══ PASSAGE 1 QUESTIONS ═══ -->
+            <div id="questions-1" class="question-set">
+
+                <div class="question" data-q-start="1" data-q-end="6">
+                    <div class="question-prompt">
+                        <p><strong>Questions 1–6</strong></p>
+                        <p>Do the following statements agree with the information given in Reading Passage 1?</p>
+                        <ul>
+                            <li><strong>TRUE</strong> &nbsp;&nbsp;if the statement agrees with the information</li>
+                            <li><strong>FALSE</strong> &nbsp;if the statement contradicts the information</li>
+                            <li><strong>NOT GIVEN</strong> &nbsp;if there is no information on this</li>
+                        </ul>
+                    </div>
+                    <div class="tf-question" data-q-start="1" data-q-end="1">
+                        <div class="tf-question-line"><span class="tf-question-number">1</span><span class="tf-question-text">In 1986 Luc Long had been looking for an opportunity to dive in the Rhone for some time.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q1" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q1" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q1" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="2" data-q-end="2">
+                        <div class="tf-question-line"><span class="tf-question-number">2</span><span class="tf-question-text">Long and his friend were the first divers to find Roman remains in the Rhone.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q2" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q2" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q2" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="3" data-q-end="3">
+                        <div class="tf-question-line"><span class="tf-question-number">3</span><span class="tf-question-text">Long's work in the Rhone attracted immediate interest.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q3" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q3" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q3" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="4" data-q-end="4">
+                        <div class="tf-question-line"><span class="tf-question-number">4</span><span class="tf-question-text">It was thought that the Neptune statue would be of interest to thieves.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q4" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q4" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q4" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="5" data-q-end="5">
+                        <div class="tf-question-line"><span class="tf-question-number">5</span><span class="tf-question-text">Benoit Poinard doubted that the barge could be raised in one diving season.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q5" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q5" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q5" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="6" data-q-end="6">
+                        <div class="tf-question-line"><span class="tf-question-number">6</span><span class="tf-question-text">The restorers were surprised to discover a silver coin in the barge.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q6" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q6" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q6" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" data-q-start="7" data-q-end="13">
+                    <div class="question-prompt">
+                        <p><strong>Questions 7–13</strong></p>
+                        <p>Complete the notes below. Choose <strong>ONE WORD ONLY</strong> from the passage for each answer.</p>
+                    </div>
+                    <div class="summary-box">
+                        <h5>The Roman barge "Arles-Rhone 3"</h5>
+                        <div class="summary-text">
+                            <p class="sub-h">The discovery and condition of the barge:</p>
+                            <ul>
+                                <li>The barge was 34 metres long and was found by one of Long's <input type="text" class="answer-input" id="q7" placeholder="7"> in 2004.</li>
+                                <li>The wood had not decayed, but water had filled its cells, making the structure soft and <input type="text" class="answer-input" id="q8" placeholder="8">.</li>
+                            </ul>
+                            <p class="sub-h">Extraction from the Rhone:</p>
+                            <ul>
+                                <li>Normally, the Rhone is safe for diving only from late June to <input type="text" class="answer-input" id="q9" placeholder="9">.</li>
+                                <li>In 2011, because it hardly snowed in the Alps, the river's <input type="text" class="answer-input" id="q10" placeholder="10"> was very gentle.</li>
+                                <li>The diving team lost only one <input type="text" class="answer-input" id="q11" placeholder="11"> to bad weather.</li>
+                            </ul>
+                            <p class="sub-h">What was found on or near the barge:</p>
+                            <ul>
+                                <li>The barge was carrying 33 tons of <input type="text" class="answer-input" id="q12" placeholder="12"> for building work.</li>
+                                <li>Under the floorboards, restorers found a silver <input type="text" class="answer-input" id="q13" placeholder="13"> dated to 30 BCE.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ PASSAGE 2 QUESTIONS ═══ -->
+            <div id="questions-2" class="question-set hidden">
+
+                <div class="question" data-q-start="14" data-q-end="18">
+                    <div class="question-prompt">
+                        <p><strong>Questions 14–18</strong></p>
+                        <p>Reading Passage 2 has eight paragraphs, <strong>A–H</strong>. Which paragraph contains the following information?</p>
+                        <p><em>NB You may use any letter more than once.</em></p>
+                    </div>
+                    <div class="matching-form-container">
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>14</strong>&nbsp;&nbsp;reference to how play can develop children's verbal skills</label><select class="answer-input" id="q14"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>15</strong>&nbsp;&nbsp;mention of a change in the amount of free play children engage in</label><select class="answer-input" id="q15"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>16</strong>&nbsp;&nbsp;an account of some research indicating that free play stimulates children's creativity</label><select class="answer-input" id="q16"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>17</strong>&nbsp;&nbsp;evidence of the link between antisocial behaviour and a lack of free play</label><select class="answer-input" id="q17"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>18</strong>&nbsp;&nbsp;a comparison between free play and other forms of play</label><select class="answer-input" id="q18"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option></select></div>
+                    </div>
+                </div>
+
+                <div class="question" data-q-start="19" data-q-end="22">
+                    <div class="question-prompt">
+                        <p><strong>Questions 19–22</strong></p>
+                        <p>Look at the following statements about free play (Questions 19–22) and the list of researchers below. Match each statement with the correct researcher, <strong>A, B, C or D</strong>. <em>NB You may use any letter more than once.</em></p>
+                    </div>
+                    <div class="example-box">
+                        <strong>List of Researchers</strong>
+                        <div style="margin-top:8px;font-size:.9em;line-height:1.9;">
+                            <div><strong>A</strong> &nbsp;Anthony Pellegrini</div>
+                            <div><strong>B</strong> &nbsp;Jaak Panksepp</div>
+                            <div><strong>C</strong> &nbsp;Stephen Sivy</div>
+                            <div><strong>D</strong> &nbsp;Marc Bekoff</div>
+                        </div>
+                    </div>
+                    <div class="matching-form-container">
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>19</strong>&nbsp;&nbsp;It encourages children to take other people's wishes into account.</label><select class="answer-input" id="q19"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>20</strong>&nbsp;&nbsp;It can serve to relieve stress.</label><select class="answer-input" id="q20"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>21</strong>&nbsp;&nbsp;It prepares children for dealing with unpredictable situations.</label><select class="answer-input" id="q21"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>22</strong>&nbsp;&nbsp;It is less useful for children when adults are involved.</label><select class="answer-input" id="q22"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+                    </div>
+                </div>
+
+                <div class="question" data-q-start="23" data-q-end="26">
+                    <div class="question-prompt">
+                        <p><strong>Questions 23–26</strong></p>
+                        <p>Complete the summary below. Choose <strong>ONE WORD ONLY</strong> from the passage for each answer.</p>
+                    </div>
+                    <div class="summary-box">
+                        <h5>Animal research into the value of play</h5>
+                        <div class="summary-text">
+                            <p>In studies researching links between play and social learning, experiments analysing problem levels in the <strong>23</strong> <input type="text" class="answer-input" id="q23" placeholder="23"> of rats noted significant differences between rats which had played and those which had not.</p>
+                            <p>In another study, rats made distressed by an object smelling of a <strong>24</strong> <input type="text" class="answer-input" id="q24" placeholder="24"> experienced a noticeable reduction in their <strong>25</strong> <input type="text" class="answer-input" id="q25" placeholder="25"> levels after they had been allowed to play.</p>
+                            <p>A further experiment, in which rats had to move a <strong>26</strong> <input type="text" class="answer-input" id="q26" placeholder="26"> in order to reach a reward, indicated that rats deprived of play were less skilled at dealing with problems.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ PASSAGE 3 QUESTIONS ═══ -->
+            <div id="questions-3" class="question-set hidden">
+
+                <div class="question" data-q-start="27" data-q-end="31">
+                    <div class="question-prompt">
+                        <p><strong>Questions 27–31</strong></p>
+                        <p>Complete the summary using the list of words, <strong>A–J</strong>, below.</p>
+                    </div>
+                    <div class="example-box">
+                        <strong>List of Words</strong>
+                        <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:.9em;line-height:1.9;">
+                            <div><strong>A</strong> accommodation</div><div><strong>B</strong> investment</div>
+                            <div><strong>C</strong> feedback</div><div><strong>D</strong> perceptions</div>
+                            <div><strong>E</strong> profit</div><div><strong>F</strong> expansion</div>
+                            <div><strong>G</strong> loans</div><div><strong>H</strong> industry</div>
+                            <div><strong>I</strong> infrastructure</div><div><strong>J</strong> labour</div>
+                        </div>
+                    </div>
+                    <div class="summary-box">
+                        <h5>Tourism – an ideal export?</h5>
+                        <div class="summary-text">
+                            <p>A developing country needs money to build things like roads, which provide the necessary <strong>27</strong> <select class="answer-input" id="q27"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select> for tourism.</p>
+                            <p>The country can use taxes from residents or <strong>28</strong> <select class="answer-input" id="q28"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select> from other countries to provide capital.</p>
+                            <p>Or, money can be found by using <strong>29</strong> <select class="answer-input" id="q29"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select> from abroad, which means the country will not receive any financial gain from what is built.</p>
+                            <p>Tourism may be affected by natural disasters, political events and people's <strong>30</strong> <select class="answer-input" id="q30"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select> of how modern the resort is.</p>
+                            <p>Even if the development of tourism is successful, a country has to decide whether the industry's <strong>31</strong> <select class="answer-input" id="q31"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select> is desirable.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" data-q-start="32" data-q-end="35">
+                    <div class="question-prompt">
+                        <p><strong>Questions 32–35</strong></p>
+                        <p>Choose the correct letter, <strong>A</strong>, <strong>B</strong>, <strong>C</strong> or <strong>D</strong>.</p>
+                    </div>
+                    <div class="multi-choice-question" data-q-start="32" data-q-end="32">
+                        <p><strong>32</strong>&nbsp;&nbsp;The writer says that for tourists, an authentic experience</p>
+                        <div class="multi-choice-options">
+                            <div class="multi-choice-option"><label><input type="radio" name="q32" value="A"> A. is only possible if official barriers can be removed.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q32" value="B"> B. may be missed if people are not clear what they want.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q32" value="C"> C. is created in an unnatural manner.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q32" value="D"> D. may be destroyed by inappropriate behaviour.</label></div>
+                        </div>
+                    </div>
+                    <div class="multi-choice-question" data-q-start="33" data-q-end="33">
+                        <p><strong>33</strong>&nbsp;&nbsp;The writer refers to the rules governing seating on a bus as an example of</p>
+                        <div class="multi-choice-options">
+                            <div class="multi-choice-option"><label><input type="radio" name="q33" value="A"> A. a way in which tourism may change the attitudes of local people.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q33" value="B"> B. an unintentional cause of offence to local people by tourists.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q33" value="C"> C. the wide variation there may be between different cultures.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q33" value="D"> D. an aspect of culture which tourism tends to ignore.</label></div>
+                        </div>
+                    </div>
+                    <div class="multi-choice-question" data-q-start="34" data-q-end="34">
+                        <p><strong>34</strong>&nbsp;&nbsp;Tourists' interest in traditionally-made objects may lead to changes in</p>
+                        <div class="multi-choice-options">
+                            <div class="multi-choice-option"><label><input type="radio" name="q34" value="A"> A. how they are made.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q34" value="B"> B. their design and function.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q34" value="C"> C. tourist attitudes towards them.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q34" value="D"> D. the way they are presented for sale.</label></div>
+                        </div>
+                    </div>
+                    <div class="multi-choice-question" data-q-start="35" data-q-end="35">
+                        <p><strong>35</strong>&nbsp;&nbsp;The writer says that in order to promote tourism, features such as folk dances</p>
+                        <div class="multi-choice-options">
+                            <div class="multi-choice-option"><label><input type="radio" name="q35" value="A"> A. may be unintentionally neglected.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q35" value="B"> B. have been publicised in undesirable ways.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q35" value="C"> C. have been taught to people working in tourist areas.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q35" value="D"> D. may be prevented from developing naturally.</label></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" data-q-start="36" data-q-end="40">
+                    <div class="question-prompt">
+                        <p><strong>Questions 36–40</strong></p>
+                        <p>Do the following statements agree with the information given in Reading Passage 3?</p>
+                        <ul>
+                            <li><strong>TRUE</strong> &nbsp;&nbsp;if the statement agrees with the information</li>
+                            <li><strong>FALSE</strong> &nbsp;if the statement contradicts the information</li>
+                            <li><strong>NOT GIVEN</strong> &nbsp;if there is no information on this</li>
+                        </ul>
+                    </div>
+                    <div class="tf-question" data-q-start="36" data-q-end="36">
+                        <div class="tf-question-line"><span class="tf-question-number">36</span><span class="tf-question-text">Ecotourism can be more profitable than mass tourism because it requires fewer facilities.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q36" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q36" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q36" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="37" data-q-end="37">
+                        <div class="tf-question-line"><span class="tf-question-number">37</span><span class="tf-question-text">Limiting the number of ecotourists is necessary to protect the environment.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q37" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q37" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q37" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="38" data-q-end="38">
+                        <div class="tf-question-line"><span class="tf-question-number">38</span><span class="tf-question-text">Some ecotourists prefer interacting with wildlife over engaging with local residents.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q38" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q38" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q38" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="39" data-q-end="39">
+                        <div class="tf-question-line"><span class="tf-question-number">39</span><span class="tf-question-text">Ecotourism always benefits both the local community and the environment equally.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q39" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q39" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q39" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="40" data-q-end="40">
+                        <div class="tf-question-line"><span class="tf-question-number">40</span><span class="tf-question-text">Tourism can influence a country's political priorities.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q40" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q40" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q40" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="nav-arrows">
+    <button class="nav-arrow" onclick="previousQuestion()" id="prevBtn">‹</button>
+    <button class="nav-arrow" onclick="nextQuestion()" id="nextBtn">›</button>
+</div>
+
+<nav class="nav-row">
+    <div class="footer__questionWrapper___1tZ46 selected" role="tablist">
+        <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(1)">
+            <span class="section-prefix">Part </span><span class="sectionNr">1</span>
+            <span class="attemptedCount">0 of 13</span>
+        </button>
+        <div class="footer__subquestionWrapper___9GgoP" id="subq-1"></div>
+    </div>
+    <div class="footer__questionWrapper___1tZ46" role="tablist">
+        <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(2)">
+            <span class="section-prefix">Part </span><span class="sectionNr">2</span>
+            <span class="attemptedCount">0 of 13</span>
+        </button>
+        <div class="footer__subquestionWrapper___9GgoP" id="subq-2"></div>
+    </div>
+    <div class="footer__questionWrapper___1tZ46" role="tablist">
+        <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(3)">
+            <span class="section-prefix">Part </span><span class="sectionNr">3</span>
+            <span class="attemptedCount">0 of 14</span>
+        </button>
+        <div class="footer__subquestionWrapper___9GgoP" id="subq-3"></div>
+    </div>
+    <button id="deliver-button" class="footer__deliverButton___3FM07">✓ Check Answers</button>
+</nav>
+
+<div id="highlightToolbar" class="highlight-toolbar">
+    <span id="toolbar-selection-btns">
+        <button class="toolbar-btn btn-yellow" onclick="applyHighlight('hl-yellow')">🟡 Yellow</button>
+        <button class="toolbar-btn btn-green"  onclick="applyHighlight('hl-green')">🟢 Green</button>
+        <div class="toolbar-sep"></div>
+        <button class="toolbar-btn btn-clear"     onclick="clearThisHighlight()">✕ Remove</button>
+        <button class="toolbar-btn btn-clear-all" onclick="clearAllHighlights()">⊘ All</button>
+    </span>
+    <span id="toolbar-highlight-btns" style="display:none">
+        <button class="toolbar-btn btn-yellow" onclick="recolorHighlight('hl-yellow')">🟡 Yellow</button>
+        <button class="toolbar-btn btn-green"  onclick="recolorHighlight('hl-green')">🟢 Green</button>
+        <div class="toolbar-sep"></div>
+        <button class="toolbar-btn btn-clear"     onclick="clearThisHighlight()">✕ Remove</button>
+        <button class="toolbar-btn btn-clear-all" onclick="clearAllHighlights()">⊘ All</button>
+    </span>
+</div>
+
+<div id="results-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <button class="modal-close-btn" onclick="closeResultsModal()">&times;</button>
+        <h2>Results</h2>
+        <div class="results-summary">
+            <p>Score: <span id="results-score"></span> / 40</p>
+            <p>IELTS Band: <span id="results-band"></span></p>
+        </div>
+        <div id="results-details" class="results-details-container"></div>
+        <div style="text-align:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
+            <button onclick="retakeTest()" style="background:#4a90e2;color:#fff;border:none;border-radius:6px;padding:10px 26px;font-size:14px;font-weight:700;cursor:pointer;">🔄 Retake Test</button>
+            <button onclick="closeResultsModal()" style="background:var(--footer-btn-bg);color:var(--text);border:1px solid var(--border-medium);border-radius:6px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;margin-left:10px;">Review Answers</button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+const correctAnswers = {
+    // P1 T/F/NG
+    '1':'FALSE','2':'NOT GIVEN','3':'FALSE','4':'TRUE','5':'TRUE','6':'NOT GIVEN',
+    // P1 Notes completion
+    '7':['colleagues','colleague'],'8':['spongy'],'9':['october'],'10':['current'],'11':['week'],'12':['stone'],'13':['coin'],
+    // P2 Paragraph matching
+    '14':'B','15':'A','16':'G','17':'C','18':'A',
+    // P2 Researcher matching
+    '19':'A','20':'C','21':'D','22':'A',
+    // P2 Summary completion
+    '23':['brains'],'24':['cat'],'25':['anxiety'],'26':['ball'],
+    // P3 Summary word list
+    '27':'I','28':'G','29':'B','30':'D','31':'F',
+    // P3 MCQ
+    '32':'C','33':'D','34':'A','35':'D',
+    // P3 T/F/NG
+    '36':'FALSE','37':'TRUE','38':'TRUE','39':'FALSE','40':'TRUE'
+};
+
+const partRanges = {1:[1,13], 2:[14,26], 3:[27,40]};
+let currentPassage = 1;
+let currentQuestion = 1;
+let timeInSeconds = 3600;
+let timerInterval;
+let zoomLevel = 100;
+let selectedRange = null;
+let highlightTarget = null;
+let lastAppliedHighlight = null;
+let activeQuestionElement = null;
+
+const MAX_Q = 40;
+
+const timerDisplay   = document.querySelector('.timer-display');
+const timerToggleBtn = document.getElementById('timer-toggle-btn');
+const timerResetBtn  = document.getElementById('timer-reset-btn');
+const deliverButton  = document.getElementById('deliver-button');
+const resizer        = document.getElementById('resizer');
+const passagePanel   = document.getElementById('passage-panel');
+const questionsPanel = document.getElementById('questions-panel');
+const hlToolbar      = document.getElementById('highlightToolbar');
+const nightModeBtn   = document.getElementById('night-mode-btn');
+const zoomInBtn      = document.getElementById('zoom-in-btn');
+const zoomOutBtn     = document.getElementById('zoom-out-btn');
+const zoomLabel      = document.getElementById('zoom-label');
+
+const pauseIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+const playIcon  = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8 5v14l11-7L8 5z"/></svg>`;
+
+[[1,1,13],[2,14,26],[3,27,40]].forEach(([part, start, end]) => {
+    const wrap = document.getElementById(`subq-${part}`);
+    for (let i = start; i <= end; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'subQuestion';
+        btn.textContent = i;
+        btn.onclick = () => goToQuestion(i);
+        wrap.appendChild(btn);
+    }
+});
+
+function init() {
+    startTimer();
+    switchToPart(1);
+    document.body.addEventListener('input', updateAllIndicators);
+    document.body.addEventListener('change', updateAllIndicators);
+    deliverButton.addEventListener('click', checkAnswers);
+    timerToggleBtn.addEventListener('click', toggleTimer);
+    timerResetBtn.addEventListener('click', resetTimer);
+    nightModeBtn.addEventListener('click', () => {
+        document.body.classList.toggle('night-mode');
+        nightModeBtn.innerHTML = document.body.classList.contains('night-mode') ? '☀️ Day' : '🌙 Night';
+    });
+    zoomInBtn.addEventListener('click', () => adjustZoom(10));
+    zoomOutBtn.addEventListener('click', () => adjustZoom(-10));
+    resizer.addEventListener('mousedown', initResize);
+    initHighlightToolbar();
+}
+
+function adjustZoom(d) {
+    zoomLevel = Math.min(200, Math.max(60, zoomLevel + d));
+    document.documentElement.style.setProperty('--font-size-base', (zoomLevel/100*16)+'px');
+    zoomLabel.textContent = zoomLevel+'%';
+}
+
+function startTimer() {
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        if (timeInSeconds <= 0) { clearInterval(timerInterval); timerDisplay.textContent = "Time's up!"; return; }
+        timeInSeconds--; updateTimerDisplay();
+    }, 1000);
+    timerToggleBtn.innerHTML = pauseIcon;
+}
+function pauseTimer() { clearInterval(timerInterval); timerToggleBtn.innerHTML = playIcon; }
+function toggleTimer() { timerToggleBtn.innerHTML.includes('M6 19h4') ? pauseTimer() : startTimer(); }
+function resetTimer() { timeInSeconds = 3600; updateTimerDisplay(); startTimer(); }
+function updateTimerDisplay() {
+    const m = Math.floor(timeInSeconds/60), s = timeInSeconds%60;
+    timerDisplay.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+window.switchToPart = function(n) {
+    currentPassage = n;
+    document.querySelectorAll('.reading-passage,.question-set,.part-header').forEach(el => el.classList.add('hidden'));
+    document.getElementById(`passage-text-${n}`).classList.remove('hidden');
+    document.getElementById(`questions-${n}`).classList.remove('hidden');
+    document.getElementById(`part-header-${n}`).classList.remove('hidden');
+    document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach((w,i) => w.classList.toggle('selected', i+1===n));
+    goToQuestion(partRanges[n][0]);
+};
+
+window.goToQuestion = function(qNum) {
+    currentQuestion = qNum;
+    let part = qNum <= 13 ? 1 : qNum <= 26 ? 2 : 3;
+    if (part !== currentPassage) switchToPart(part);
+
+    if (activeQuestionElement) activeQuestionElement.classList.remove('active-question','active-input');
+
+    let target = document.querySelector(`[data-q-start="${qNum}"]`);
+    if (!target) {
+        document.querySelectorAll('[data-q-start]').forEach(el => {
+            const s = parseInt(el.dataset.qStart), e = parseInt(el.dataset.qEnd||el.dataset.qStart);
+            if (qNum >= s && qNum <= e) target = el;
+        });
+    }
+    if (target) { activeQuestionElement = target; target.classList.add('active-question'); target.scrollIntoView({behavior:'smooth',block:'center'}); }
+
+    document.querySelectorAll('.answer-input').forEach(el => el.classList.remove('active-input'));
+    const inp = document.getElementById(`q${qNum}`);
+    if (inp) { inp.classList.add('active-input'); try{inp.focus();}catch(e){} }
+
+    document.querySelectorAll('.subQuestion').forEach(b => b.classList.remove('active'));
+    const activeBtn = Array.from(document.querySelectorAll('.subQuestion')).find(b => parseInt(b.textContent)===qNum);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    document.getElementById('prevBtn').disabled = qNum <= 1;
+    document.getElementById('nextBtn').disabled = qNum >= MAX_Q;
+};
+
+window.nextQuestion     = () => currentQuestion < MAX_Q && goToQuestion(currentQuestion+1);
+window.previousQuestion = () => currentQuestion > 1  && goToQuestion(currentQuestion-1);
+
+function isAnswered(q) {
+    const el = document.getElementById(`q${q}`);
+    if (el) return el.tagName==='SELECT' ? el.value!=='' : el.value.trim()!=='';
+    return !!document.querySelector(`input[name="q${q}"]:checked`);
+}
+
+function updateAllIndicators() {
+    [[1,1,13],[2,14,26],[3,27,40]].forEach(([part,start,end]) => {
+        let count=0; for(let i=start;i<=end;i++) if(isAnswered(i)) count++;
+        const wrap = document.querySelectorAll('.footer__questionWrapper___1tZ46')[part-1];
+        if(wrap){ const sp=wrap.querySelector('.attemptedCount'); if(sp) sp.textContent=`${count} of ${end-start+1}`; }
+    });
+    document.querySelectorAll('.subQuestion').forEach(btn => {
+        const n=parseInt(btn.textContent);
+        if(!btn.classList.contains('correct')&&!btn.classList.contains('incorrect'))
+            btn.classList.toggle('answered', isAnswered(n));
+    });
+}
+
+const norm = s => (s||'').trim().toLowerCase();
+
+function checkAnswers() {
+    document.querySelectorAll('.reading-passage,.question-set,.part-header').forEach(el=>el.classList.remove('hidden'));
+    document.querySelectorAll('input,select').forEach(el=>el.disabled=true);
+    deliverButton.disabled=true;
+    clearInterval(timerInterval);
+
+    document.querySelectorAll('.correct,.incorrect,.correct-answer-highlight').forEach(el=>el.classList.remove('correct','incorrect','correct-answer-highlight'));
+    document.querySelectorAll('.correct-answer-display').forEach(el=>el.remove());
+
+    let score=0;
+    const resultsEl=document.getElementById('results-details');
+    resultsEl.innerHTML='';
+
+    function appendResult(q,ok,user,correct) {
+        resultsEl.innerHTML+=`<div class="result-row ${ok?'':'incorrect'}"><span class="q-num">${q}</span><span class="user-ans">${user||'Not Answered'}</span><span class="correct-ans">${correct}</span></div>`;
+        const btn=Array.from(document.querySelectorAll('.subQuestion')).find(b=>parseInt(b.textContent)===q);
+        if(btn){btn.classList.remove('answered','active');btn.classList.add(ok?'correct':'incorrect');}
+    }
+    function showCorrect(el,display) {
+        const sp=document.createElement('span');
+        sp.className='correct-answer-display';
+        sp.innerHTML=` ➜ <span class="correct-answer-highlight">${display}</span>`;
+        el.parentNode.insertBefore(sp,el.nextSibling);
+    }
+    function checkTextQ(i) {
+        const el=document.getElementById(`q${i}`);
+        const correct=correctAnswers[String(i)];
+        const display=Array.isArray(correct)?correct[0]:correct;
+        const user=el?el.value:'';
+        const ok=Array.isArray(correct)?correct.some(c=>norm(user)===norm(c)):norm(user)===norm(correct);
+        if(el)el.classList.add(ok?'correct':'incorrect');
+        if(!ok&&el)showCorrect(el,display);
+        if(ok)score++;
+        appendResult(i,ok,user,display);
+    }
+    function checkSelectQ(i) {
+        const el=document.getElementById(`q${i}`);
+        const correct=correctAnswers[String(i)];
+        const user=el?el.value:'';
+        const ok=norm(user)===norm(correct);
+        const row=el?el.closest('.matching-form-row'):null;
+        if(row)row.classList.add(ok?'correct':'incorrect');
+        if(!ok&&el)showCorrect(el,correct);
+        if(ok)score++;
+        appendResult(i,ok,user,correct);
+    }
+    function checkTFQ(i) {
+        const correct=correctAnswers[String(i)];
+        const checked=document.querySelector(`input[name="q${i}"]:checked`);
+        const container=document.querySelector(`.tf-question[data-q-start="${i}"]`);
+        const user=checked?checked.value:'';
+        const ok=user===correct;
+        if(container){container.classList.add(ok?'correct':'incorrect');if(!ok){const c=container.querySelector(`input[value="${correct}"]`);if(c)(c.closest('.tf-option')||c).classList.add('correct-answer-highlight');}}
+        if(ok)score++;
+        appendResult(i,ok,user,correct);
+    }
+    function checkMCQ(i) {
+        const correct=correctAnswers[String(i)];
+        const checked=document.querySelector(`input[name="q${i}"]:checked`);
+        const container=document.querySelector(`.multi-choice-question[data-q-start="${i}"]`);
+        const user=checked?checked.value:'';
+        const ok=user===correct;
+        if(checked)(checked.closest('.multi-choice-option')||checked).classList.add(ok?'correct':'incorrect');
+        if(container&&!ok){container.classList.add('incorrect');const c=container.querySelector(`input[value="${correct}"]`);if(c)(c.closest('.multi-choice-option')||c).classList.add('correct-answer-highlight');}
+        if(ok)score++;
+        appendResult(i,ok,user,correct);
+    }
+
+    for(let i=1;i<=6;i++) checkTFQ(i);       // P1 T/F/NG
+    for(let i=7;i<=13;i++) checkTextQ(i);    // P1 notes completion
+
+    for(let i=14;i<=18;i++) checkSelectQ(i); // P2 paragraph matching
+    for(let i=19;i<=22;i++) checkSelectQ(i); // P2 researcher matching
+    for(let i=23;i<=26;i++) checkTextQ(i);   // P2 summary completion
+
+    for(let i=27;i<=31;i++) checkSelectQ(i); // P3 summary word list
+    for(let i=32;i<=35;i++) checkMCQ(i);     // P3 MCQ
+    for(let i=36;i<=40;i++) checkTFQ(i);     // P3 T/F/NG
+
+    document.getElementById('results-score').textContent=score;
+    document.getElementById('results-band').textContent=calcBand(score);
+    document.getElementById('results-modal').classList.remove('hidden');
+}
+
+function calcBand(s){
+    const m={40:9,39:9,38:8.5,37:8.5,36:8,35:8,34:7.5,33:7.5,32:7,31:7,30:6.5,29:6.5,28:6,27:6,26:6,25:5.5,24:5.5,23:5.5,22:5,21:5,20:5,19:4.5,18:4.5,17:4.5,16:4,15:4,14:4,13:3.5,12:3.5,11:3.5,10:3,9:3,8:3,7:2.5,6:2.5,5:2.5,4:2,3:2,2:2,1:1,0:0};
+    return m[s]!==undefined?m[s]:'0';
+}
+
+window.closeResultsModal=()=>document.getElementById('results-modal').classList.add('hidden');
+
+window.retakeTest=()=>{
+    document.querySelectorAll('input,select').forEach(el=>{el.disabled=false;});
+    deliverButton.disabled=false;
+    document.querySelectorAll('.correct,.incorrect,.correct-answer-highlight').forEach(el=>el.classList.remove('correct','incorrect','correct-answer-highlight'));
+    document.querySelectorAll('.correct-answer-display').forEach(el=>el.remove());
+    document.querySelectorAll('input[type="text"]').forEach(el=>el.value='');
+    document.querySelectorAll('select').forEach(el=>el.value='');
+    document.querySelectorAll('input[type="radio"]').forEach(el=>el.checked=false);
+    document.querySelectorAll('.subQuestion').forEach(b=>b.classList.remove('correct','incorrect','answered','active'));
+    resetTimer();
+    document.getElementById('results-modal').classList.add('hidden');
+    switchToPart(1);
+    updateAllIndicators();
+};
+
+function initResize(e) {
+    e.preventDefault();
+    const startX=e.clientX, startW=passagePanel.offsetWidth;
+    const drag=ev=>{const nw=startW+ev.clientX-startX;if(nw>200&&(document.body.clientWidth-nw-8)>200)passagePanel.style.flex=`0 0 ${nw}px`;};
+    const stop=()=>{window.removeEventListener('mousemove',drag);window.removeEventListener('mouseup',stop);};
+    window.addEventListener('mousemove',drag);
+    window.addEventListener('mouseup',stop);
+}
+
+function initHighlightToolbar() {
+    const panels=[passagePanel,questionsPanel];
+    const selBtns=document.getElementById('toolbar-selection-btns');
+    const hlBtns=document.getElementById('toolbar-highlight-btns');
+    document.addEventListener('selectionchange',()=>{
+        const sel=window.getSelection();
+        if(sel&&!sel.isCollapsed&&sel.toString().trim()){
+            const r=sel.getRangeAt(0);
+            if(panels.some(p=>p.contains(r.commonAncestorContainer))) selectedRange=r.cloneRange();
+        }
+    });
+    document.addEventListener('mouseup',e=>{
+        if(hlToolbar.contains(e.target)) return;
+        const sel=window.getSelection();
+        const overHL=e.target.closest('.highlight');
+        if(overHL&&(!sel||sel.isCollapsed)){
+            highlightTarget=overHL;selectedRange=null;lastAppliedHighlight=null;
+            selBtns.style.display='none';hlBtns.style.display='inline-flex';positionToolbar(e);return;
+        }
+        if(sel&&!sel.isCollapsed&&sel.toString().trim()){
+            const r=sel.getRangeAt(0);
+            if(panels.some(p=>p.contains(r.commonAncestorContainer))){
+                highlightTarget=null;selBtns.style.display='inline-flex';hlBtns.style.display='none';positionToolbar(e);return;
+            }
+        }
+        hideToolbar();
+    });
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')hideToolbar();});
+    passagePanel.addEventListener('scroll',hideToolbar);
+    questionsPanel.addEventListener('scroll',hideToolbar);
+}
+function positionToolbar(e) {
+    hlToolbar.classList.add('visible');
+    requestAnimationFrame(()=>{
+        const tbW=hlToolbar.offsetWidth||240, tbH=hlToolbar.offsetHeight||40;
+        let left=e.pageX-tbW/2, top=e.pageY-tbH-12;
+        if(left<6)left=6;
+        if(left+tbW>window.innerWidth-6)left=window.innerWidth-tbW-6;
+        if(top<62)top=e.pageY+12;
+        hlToolbar.style.left=left+'px';hlToolbar.style.top=top+'px';
+    });
+}
+function hideToolbar(){hlToolbar.classList.remove('visible');}
+window.applyHighlight=function(cls){
+    if(!selectedRange||selectedRange.collapsed){hideToolbar();return;}
+    try{const sp=document.createElement('span');sp.className='highlight '+cls;sp.appendChild(selectedRange.extractContents());selectedRange.insertNode(sp);lastAppliedHighlight=sp;}catch(e){}
+    hideToolbar();window.getSelection().removeAllRanges();selectedRange=null;
+};
+window.recolorHighlight=function(cls){if(!highlightTarget){hideToolbar();return;}highlightTarget.className='highlight '+cls;highlightTarget=null;hideToolbar();};
+window.clearThisHighlight=function(){const tgt=highlightTarget||lastAppliedHighlight;if(!tgt||!tgt.parentNode){hideToolbar();return;}unwrap(tgt);highlightTarget=null;lastAppliedHighlight=null;hideToolbar();};
+window.clearAllHighlights=function(){document.querySelectorAll('.highlight').forEach(unwrap);highlightTarget=null;lastAppliedHighlight=null;hideToolbar();};
+function unwrap(el){const p=el.parentNode;if(!p)return;while(el.firstChild)p.insertBefore(el.firstChild,el);p.removeChild(el);p.normalize();}
+
+init();
+});
+</script>
+</body>
+</html>
