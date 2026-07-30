@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ucell raqam kuzatuvchi</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+  }
+  .card {
+    max-width: 480px;
+    margin: 0 auto;
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+  h1 { font-size: 20px; margin: 0 0 4px; color: #fff; }
+  .sub { color: #94a3b8; font-size: 14px; margin-bottom: 20px; }
+  .number {
+    font-size: 24px;
+    font-weight: 700;
+    color: #38bdf8;
+    text-align: center;
+    padding: 14px;
+    background: #0f172a;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+  }
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 10px;
+    background: #0f172a;
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+  .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #64748b;
+    flex-shrink: 0;
+  }
+  .dot.checking { background: #eab308; animation: pulse 1s infinite; }
+  .dot.available { background: #22c55e; }
+  .dot.error { background: #ef4444; }
+  @keyframes pulse { 50% { opacity: 0.4; } }
+  .found {
+    display: none;
+    background: #16a34a;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    animation: flash 1s infinite;
+  }
+  @keyframes flash { 50% { background: #22c55e; } }
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 10px;
+    text-align: center;
+    text-decoration: none;
+  }
+  .btn-primary { background: #38bdf8; color: #0f172a; }
+  .btn-secondary { background: #334155; color: #e2e8f0; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .log {
+    font-size: 12px;
+    color: #64748b;
+    text-align: center;
+    margin-top: 12px;
+  }
+  a.link { color: #38bdf8; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>📱 Raqam kuzatuvchi</h1>
+  <div class="sub">Ucell "Chiroyli raqamlar" sahifasi avtomatik tekshiriladi</div>
+
+  <div class="number">+998 50 700 70 58</div>
+
+  <div id="found" class="found">🎉 RAQAM PAYDO BO'LDI!<br>Darhol saytga o'ting va bron qiling!</div>
+
+  <div class="status">
+    <div id="dot" class="dot"></div>
+    <div id="statusText">Kuzatuv boshlanmagan</div>
+  </div>
+
+  <button id="toggleBtn" class="btn btn-primary" onclick="toggleWatch()">▶️ Kuzatuvni boshlash</button>
+  <a class="btn btn-secondary" href="https://ucell.uz/uz/services/reservation_numbers" target="_blank">🔗 Sahifani ochish</a>
+
+  <div class="log" id="log">Har 30 soniyada tekshiriladi. Sahifani ochiq qoldiring.</div>
+</div>
+
+<script>
+const TARGET_RAW = "+998507007058";
+const PAGE_URL = "https://ucell.uz/uz/services/reservation_numbers";
+// Bir nechta zaxira CORS-proksi - biri ishlamasa, keyingisi sinaladi
+const PROXIES = [
+  url => "https://api.allorigins.win/raw?url=" + encodeURIComponent(url),
+  url => "https://corsproxy.io/?url=" + encodeURIComponent(url),
+  url => "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(url)
+];
+
+let watching = false;
+let intervalId = null;
+let audioCtx = null;
+
+// Sahifa ichidagi kutilmagan skript xatolarini jimgina ushlab qolish
+window.addEventListener("error", function(e) {
+  e.preventDefault();
+  return true;
+});
+window.addEventListener("unhandledrejection", function(e) {
+  e.preventDefault();
+});
+
+function normalize(str) {
+  return str.replace(/[^0-9]/g, "");
+}
+
+function playAlarm() {
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    for (let i = 0; i < 4; i++) {
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.connect(g); g.connect(audioCtx.destination);
+      o.frequency.value = 880;
+      g.gain.value = 0.2;
+      const start = audioCtx.currentTime + i * 0.5;
+      o.start(start);
+      o.stop(start + 0.3);
+    }
+  } catch (e) {}
+  if (Notification && Notification.permission === "granted") {
+    new Notification("Raqam mavjud bo'ldi!", { body: TARGET_RAW + " hozir bron qilish uchun ochiq." });
+  }
+}
+
+async function checkOnce() {
+  const dot = document.getElementById("dot");
+  const statusText = document.getElementById("statusText");
+  const log = document.getElementById("log");
+  dot.className = "dot checking";
+  statusText.textContent = "Tekshirilmoqda...";
+
+  let html = null;
+  let lastError = null;
+
+  for (const buildUrl of PROXIES) {
+    try {
+      const res = await fetch(buildUrl(PAGE_URL), { cache: "no-store" });
+      if (!res.ok) { lastError = "HTTP " + res.status; continue; }
+      html = await res.text();
+      if (html && html.length > 100) break;
+    } catch (e) {
+      lastError = (e && e.message) ? e.message : "noma'lum xato";
+    }
+  }
+
+  const now = new Date().toLocaleTimeString("uz-UZ");
+
+  if (!html) {
+    dot.className = "dot error";
+    statusText.textContent = "Xatolik: sahifani o'qib bo'lmadi (" + (lastError || "server javob bermadi") + ")";
+    log.textContent = "Oxirgi urinish: " + now + " — keyingi urinish 30s dan keyin";
+    return;
+  }
+
+  const normalizedHtml = normalize(html);
+  const target = normalize(TARGET_RAW);
+  log.textContent = "Oxirgi tekshiruv: " + now;
+
+  if (normalizedHtml.includes(target)) {
+    dot.className = "dot available";
+    statusText.textContent = "✅ Topildi!";
+    document.getElementById("found").style.display = "block";
+    playAlarm();
+    stopWatch(false);
+  } else {
+    dot.className = "dot";
+    statusText.textContent = "Hali mavjud emas, kuzatilmoqda...";
+  }
+}
+
+function toggleWatch() {
+  if (watching) {
+    stopWatch(true);
+  } else {
+    if (Notification && Notification.permission !== "granted") {
+      Notification.requestPermission();
+    }
+    watching = true;
+    document.getElementById("toggleBtn").textContent = "⏸️ Kuzatuvni to'xtatish";
+    checkOnce();
+    intervalId = setInterval(checkOnce, 30000);
+  }
+}
+
+function stopWatch(manual) {
+  watching = false;
+  clearInterval(intervalId);
+  document.getElementById("toggleBtn").textContent = "▶️ Kuzatuvni boshlash";
+  if (manual) {
+    document.getElementById("statusText").textContent = "To'xtatildi";
+    document.getElementById("dot").className = "dot";
+  }
+}
+</script>
+</body>
+</html>

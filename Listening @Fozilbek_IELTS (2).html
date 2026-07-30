@@ -5,13 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>IELTS CDI Listening Practice</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 :root {
     --bg-color: #ffffff;
     --text-color: #333333;
     --border-color: #e0e0e0;
-    --frame-color: #666666;
     --primary-color: #1e6de6;
     --secondary-bg: #f8f9fa;
     --correct-color: #28a745;
@@ -22,15 +25,12 @@
     --font-size: 16px;
     --input-bg: #ffffff;
     --input-text: #333333;
-    --track-color: #dddddd;
-    --accent-color: #4a6cf7;
 }
 
 [data-theme="dark"] {
     --bg-color: #1a1a1a;
     --text-color: #f0f0f0;
     --border-color: #444444;
-    --frame-color: #8a8a8a;
     --primary-color: #4a90e2;
     --secondary-bg: #2d2d2d;
     --correct-color: #2ecc71;
@@ -40,8 +40,6 @@
     --telegram-color: #4a90e2;
     --input-bg: #2d2d2d;
     --input-text: #ffffff;
-    --track-color: #4a4a4a;
-    --accent-color: #6d8bff;
 }
 
 .font-small { --font-size: 14px; }
@@ -62,257 +60,416 @@ body {
 body::after {
     content: "@FOZILBEK_IELTS";
     position: fixed;
-    left: 50%; top: 50%;
+    left: 50%;
+    top: 50%;
     transform: translate(-50%, -50%) rotate(-20deg);
-    font-size: 72px; font-weight: 800; letter-spacing: 2px;
-    color: var(--text-color); opacity: 0.04;
-    pointer-events: none; z-index: 0; white-space: nowrap;
+    font-size: 72px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--text-color);
+    opacity: 0.04;
+    pointer-events: none;
+    z-index: 0;
+    white-space: nowrap;
     transition: color 0.3s;
 }
 
-/* === HIGHLIGHT STYLES === */
+/* === HIGHLIGHT STYLES ===
+   No horizontal padding / no border-radius so that highlighting two
+   parts of the same word never leaves a visible gap. */
 .highlight {
     background-color: var(--highlight-color);
     color: var(--highlight-text-color) !important;
-    padding: 0; margin: 0; border-radius: 0;
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
     transition: background-color 0.3s, color 0.3s;
 }
-[data-theme="dark"] .highlight { background-color: var(--highlight-color); color: #000000 !important; text-shadow: none; }
+
+[data-theme="dark"] .highlight {
+    background-color: var(--highlight-color);
+    color: #000000 !important;
+    text-shadow: none;
+}
 
 .comment-highlight {
-    background-color: #90EE90; position: relative; cursor: help;
-    color: #000000 !important; padding: 0; margin: 0;
+    background-color: #90EE90;
+    position: relative;
+    cursor: help;
+    color: #000000 !important;
+    padding: 0;
+    margin: 0;
 }
-[data-theme="dark"] .comment-highlight { background-color: #006400; color: #ffffff !important; }
+
+[data-theme="dark"] .comment-highlight {
+    background-color: #006400;
+    color: #ffffff !important;
+}
 
 .comment-tooltip {
-    position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
-    background: #333; color: white; padding: 8px 12px; border-radius: 4px;
-    font-size: 14px; white-space: nowrap; z-index: 1000; opacity: 0;
-    pointer-events: none; transition: opacity 0.3s;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: nowrap;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
 }
-.comment-highlight:hover .comment-tooltip { opacity: 1; }
+
+.comment-highlight:hover .comment-tooltip {
+    opacity: 1;
+}
 
 .header {
-    background-color: var(--bg-color); padding: 12px 20px;
+    background-color: var(--bg-color);
+    padding: 12px 20px;
     border-bottom: 1px solid var(--border-color);
-    display: flex; justify-content: space-between; align-items: center;
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    height: 60px;
     transition: background-color 0.3s, border-color 0.3s;
 }
-.header-left { display: flex; align-items: center; gap: 20px; }
-.ielts-logo { height: 55px; width: auto; display: block; }
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.ielts-logo {
+    height: 55px;
+    width: auto;
+    display: block;
+}
 
 .telegram-link {
-    color: var(--telegram-color) !important; text-decoration: none;
-    font-weight: 600; font-size: 14px; display: flex; align-items: center;
-    gap: 8px; padding: 6px 0; background: none !important; border: none !important;
-    line-height: 1; transition: opacity 0.2s;
+    color: var(--telegram-color) !important;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    background: none !important;
+    border: none !important;
+    line-height: 1;
+    transition: opacity 0.2s;
 }
+
 .telegram-link:hover { opacity: 0.8; }
 
-.header-icons { display: flex; gap: 10px; align-items: center; }
+.header-icons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
 .font-size-container { position: relative; }
 
 .font-size-btn, .dark-mode-btn, .tool-btn {
-    width: 32px; height: 32px; border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
     border: 1px solid var(--border-color);
-    background: var(--bg-color); color: var(--text-color);
-    font-weight: bold; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s; position: relative;
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    position: relative;
 }
-.font-size-btn:hover, .dark-mode-btn:hover, .tool-btn:hover { background-color: var(--secondary-bg); }
+
+.font-size-btn:hover, .dark-mode-btn:hover, .tool-btn:hover {
+    background-color: var(--secondary-bg);
+}
 
 .font-size-options {
-    position: absolute; top: 100%; right: 0; background: var(--bg-color);
-    border: 1px solid var(--border-color); border-radius: 4px; padding: 8px 0;
-    min-width: 120px; display: none; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 8px 0;
+    min-width: 120px;
+    display: none;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
+
 .font-size-options.show { display: block; }
-.font-size-options div { padding: 8px 16px; cursor: pointer; transition: background-color 0.2s; font-size: 14px; }
+
+.font-size-options div {
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 14px;
+}
+
 .font-size-options div:hover { background-color: var(--secondary-bg); }
 
-.sun-icon, .moon-icon { position: absolute; transition: opacity 0.3s, transform 0.3s; }
+.sun-icon, .moon-icon {
+    position: absolute;
+    transition: opacity 0.3s, transform 0.3s;
+}
 .sun-icon { opacity: 1; transform: scale(1); }
 .moon-icon { opacity: 0; transform: scale(0.5); }
 [data-theme="dark"] .sun-icon { opacity: 0; transform: scale(0.5); }
 [data-theme="dark"] .moon-icon { opacity: 1; transform: scale(1); }
 
-
-/* ===================================================================
-   AUDIO PLAYER
-   =================================================================== */
-.audio-player-container {
-    position: fixed;
-    top: 65px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 500px;
-    max-width: 90%;
-    height: 40px;
-    background: var(--secondary-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+.main-container {
+    margin-top: 60px;
     display: flex;
-    align-items: center;
-    padding: 0 15px;
-    z-index: 99;
-    gap: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s, border-color 0.3s;
+    background: var(--bg-color);
+    padding-bottom: 100px;
+    transition: background-color 0.3s;
 }
 
-.player-btn {
-    background: none; border: none; cursor: pointer; padding: 5px;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--text-color);
-}
-.player-btn svg { width: 20px; height: 20px; fill: currentColor; }
-#volume-btn svg { fill: none; stroke: currentColor; stroke-width: 2; }
-
-.progress-container { flex-grow: 1; display: flex; align-items: center; gap: 10px; min-width: 0; }
-
-#progress-bar {
-    flex-grow: 1; -webkit-appearance: none; appearance: none;
-    height: 4px; background: var(--track-color); outline: none;
-    border-radius: 3px; cursor: pointer;
-}
-#progress-bar::-webkit-slider-thumb {
-    -webkit-appearance: none; width: 12px; height: 12px;
-    border-radius: 50%; background: var(--accent-color); cursor: pointer;
-}
-#progress-bar::-moz-range-thumb {
-    width: 12px; height: 12px; border-radius: 50%;
-    background: var(--accent-color); border: none; cursor: pointer;
-}
-
-#current-time, #total-duration {
-    font-size: 12px; color: var(--text-color); opacity: 0.8;
-    min-width: 35px; text-align: center; font-variant-numeric: tabular-nums;
-}
-
-.controls-container { display: flex; align-items: center; gap: 10px; }
-
-#new-volume-slider {
-    -webkit-appearance: none; appearance: none;
-    width: 60px; height: 3px; background: var(--track-color);
-    outline: none; border-radius: 2px; cursor: pointer; margin-left: 8px;
-}
-#new-volume-slider::-webkit-slider-thumb {
-    -webkit-appearance: none; width: 12px; height: 12px;
-    border-radius: 50%; background: var(--text-color); cursor: pointer;
-}
-#new-volume-slider::-moz-range-thumb {
-    width: 12px; height: 12px; border-radius: 50%;
-    background: var(--text-color); border: none; cursor: pointer;
-}
-
-.speed-container { position: relative; }
-#speed-btn {
-    font-size: 12px; font-weight: 600; color: var(--text-color);
-    background-color: var(--bg-color); border: 1px solid var(--border-color);
-    border-radius: 4px; padding: 4px 8px; cursor: pointer;
-}
-#speed-options {
-    position: absolute; top: calc(100% + 5px); right: 0;
-    background: var(--bg-color); border: 1px solid var(--border-color);
-    border-radius: 4px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); z-index: 1200;
-}
-#speed-options div { padding: 8px 15px; cursor: pointer; font-size: 13px; color: var(--text-color); }
-#speed-options div:hover { background-color: var(--secondary-bg); }
-#speed-options div.active { color: var(--accent-color); font-weight: 600; }
-
-#global-audio-player { display: none; }
-
-/* ===================================================================
-   LAYOUT (offset for header 60px + audio bar 64px)
-   =================================================================== */
-.main-container { margin-top: 115px; display: flex; background: var(--bg-color); padding-bottom: 100px; transition: background-color 0.3s; }
 .main-container.results-mode { display: flex; flex-direction: row; }
 
-.left-panel { width: 100%; padding: 20px; transition: width 0.4s ease; }
-.main-container.results-mode .left-panel { width: 75%; overflow-y: auto; height: calc(100vh - 195px); }
+.left-panel {
+    width: 100%;
+    padding: 20px;
+    transition: width 0.4s ease;
+}
+
+.main-container.results-mode .left-panel {
+    width: 75%;
+    overflow-y: auto;
+    height: calc(100vh - 195px);
+}
 
 .right-panel {
-    display: none; width: 50%; padding: 20px; position: relative;
-    border-left: 1px solid var(--border-color); overflow-y: auto; height: calc(100vh - 195px);
-}
-#transcription-container h2 { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
-#transcription-text { white-space: pre-wrap; font-family: inherit; font-size: 15px; line-height: 1.7; }
-.main-container.results-mode .right-panel {
-    display: block; width: 25%; border-left: 1px solid var(--border-color);
-    border-top: none; height: calc(100vh - 195px); overflow-y: auto;
+    display: none;
+    width: 50%;
+    padding: 20px;
+    position: relative;
+    border-left: 1px solid var(--border-color);
+    overflow-y: auto;
+    height: calc(100vh - 195px);
 }
 
+#transcription-container h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#transcription-text {
+    white-space: pre-wrap;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.main-container.results-mode .right-panel {
+    display: block;
+    width: 25%;
+    border-left: 1px solid var(--border-color);
+    border-top: none;
+    height: calc(100vh - 195px);
+    overflow-y: auto;
+}
+
+.section-title { font-weight: bold; margin-bottom: 15px; font-size: 18px; }
+
 .correct-inline {
-    color: var(--correct-color); font-weight: 700; margin-left: 10px;
-    display: inline-block; vertical-align: middle; white-space: nowrap;
+    color: var(--correct-color);
+    font-weight: 700;
+    margin-left: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    white-space: nowrap;
 }
 .correct-inline::before { content: "→ "; font-weight: 700; }
 
-.question-title { font-weight: bold; margin-bottom: 10px; font-size: 16px; }
-.centered-title { text-align: center; font-size: 20px; font-weight: bold; margin-bottom: 15px; }
+.question-number {
+    background: var(--bg-color);
+    border: 1px solid var(--primary-color);
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-weight: bold;
+    font-size: 14px;
+    color: var(--primary-color);
+    min-width: 30px;
+    text-align: center;
+}
 
-/* ===== Notes table (Part 1) ===== */
-.notes-table { width: 100%; max-width: 780px; border-collapse: collapse; border: 1px solid var(--frame-color); margin: 0 auto 26px; }
-.notes-table td { border: none; padding: 8px 14px; vertical-align: top; line-height: 2.0; }
-.notes-table .table-title { text-align: center; font-size: 18px; font-weight: bold; padding: 14px 12px 6px; }
-.notes-table .example-cell { font-weight: bold; padding-bottom: 0; }
-.notes-table .label-cell { width: 42%; }
+.question-title { font-weight: bold; margin-bottom: 10px; font-size: 16px; }
+
+.instruction { margin-bottom: 20px; font-size: 16px; color: #666; }
+[data-theme="dark"] .instruction { color: #aaa; }
+
+.centered-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* ===== Notes table (Part 1 / Part 4) ===== */
+.notes-table {
+    width: 100%;
+    max-width: 720px;
+    border-collapse: collapse;
+    border: 1px solid #666;
+    margin: 0 auto;
+}
+.notes-table td {
+    border: 1px solid #666;
+    padding: 12px 14px;
+    vertical-align: top;
+    line-height: 2.0;
+}
+.notes-table .table-title {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 12px;
+}
+.notes-table .label-cell { width: 32%; font-weight: 500; }
 .notes-table ul { list-style: none; padding-left: 0; margin: 0; }
 .notes-table li { margin-bottom: 6px; }
-.notes-table li::before { content: "\2013\00a0\00a0"; }
 
 /* ===== Framed notes (Part 4) ===== */
-.framed-notes { border: 1px solid var(--frame-color); padding: 24px 28px; max-width: 780px; margin: 0 auto; }
-.framed-notes h3 { text-align: center; font-size: 20px; margin-bottom: 18px; }
+.framed-notes {
+    border: 1px solid #666;
+    padding: 24px 28px;
+    max-width: 720px;
+    margin: 0 auto;
+}
+.framed-notes h3 {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
 .framed-notes .group-head { font-weight: bold; margin: 18px 0 8px; }
-.framed-notes ul { list-style: disc; padding-left: 40px; }
+.framed-notes ul { list-style: disc; padding-left: 22px; }
 .framed-notes li { margin-bottom: 12px; line-height: 2.0; }
 
-/* ===== Flow chart (Part 3) ===== */
-.flow-chart { max-width: 780px; margin: 0 auto; }
-.flow-box {
-    border: 2px solid var(--frame-color); padding: 14px 18px;
-    text-align: center; line-height: 2.0;
+/* ===== Matching (A/B/C box + statements) ===== */
+.matching-key {
+    border: 1px solid #666;
+    max-width: 380px;
+    margin: 0 auto 24px;
+    padding: 12px 18px;
 }
-.flow-arrow { text-align: center; font-size: 26px; line-height: 1.2; margin: 6px 0; font-weight: bold; }
+.matching-key .key-title { text-align: center; font-weight: bold; margin-bottom: 8px; }
+.matching-key div.key-row { padding: 3px 0; }
+.matching-key .key-letter { font-weight: bold; display: inline-block; width: 24px; }
 
-/* ===== Text inputs ===== */
+.matching-list { list-style: none; padding-left: 0; }
+.matching-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    line-height: 1.8;
+}
+.matching-list .m-num { font-weight: bold; min-width: 26px; }
+.matching-list .m-text { flex: 1; }
+
+.matching-select {
+    border: 1px solid #9aa3ad;
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    padding: 6px 8px;
+    font-size: 16px;
+    min-width: 70px;
+    height: 34px;
+    cursor: pointer;
+}
+[data-theme="dark"] .matching-select {
+    background-color: var(--input-bg);
+    color: #ffffff !important;
+    border-color: #666;
+}
+.matching-select:focus { outline: none; border-color: #2c6bed; border-width: 2px; }
+.matching-select.correct { border-color: var(--correct-color); background-color: #e9f7ef; color: #155724; }
+.matching-select.incorrect { border-color: var(--incorrect-color); background-color: #f8d7da; color: #721c24; }
+
+/* ===== Text answer inputs ===== */
 .answer-input {
-    border: 1px solid #9aa3ad; border-radius: 4px;
-    background-color: var(--input-bg); color: var(--input-text);
-    padding: 4px 8px; font-size: 16px; text-align: left; margin-right: 4px;
-    width: 150px; max-width: 170px; min-width: 120px;
-    word-break: break-word; overflow-wrap: break-word; white-space: normal;
-    height: 28px; min-height: 28px; line-height: 1.2; vertical-align: middle;
-    font-weight: 600; position: relative; z-index: 10;
+    border: 1px solid #9aa3ad;
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    padding: 4px 8px;
+    font-size: 16px;
+    text-align: left;
+    margin-right: 4px;
+    width: 150px;
+    max-width: 170px;
+    min-width: 120px;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    height: 28px;
+    min-height: 28px;
+    line-height: 1.2;
+    vertical-align: middle;
+    font-weight: 600;
+    position: relative;
+    z-index: 10;
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
-[data-theme="dark"] .answer-input { background-color: var(--input-bg); color: #ffffff !important; border-color: #666; }
+
+[data-theme="dark"] .answer-input {
+    background-color: var(--input-bg);
+    color: #ffffff !important;
+    border-color: #666;
+}
+
 .answer-input::placeholder { color: #999; font-weight: bold; text-align: center; }
-[data-theme="dark"] .answer-input::placeholder { color: #aaaaaa; }
 .answer-input:focus { outline: none; border-color: #2c6bed; border-width: 2px; }
 .answer-input.correct { border-color: var(--correct-color); background-color: #e9f7ef; color: #155724; }
 .answer-input.incorrect { border-color: var(--incorrect-color); background-color: #f8d7da; color: #721c24; }
 [data-theme="dark"] .answer-input.correct { color: #ffffff !important; background-color: #14532d; }
 [data-theme="dark"] .answer-input.incorrect { color: #ffffff !important; background-color: #5c1a1f; }
 
-/* ===== MCQ / multi-select ===== */
+/* ===== MCQ ===== */
 .multi-choice-option {
-    display: block; width: 100%; padding: 12px 14px;
-    background-color: var(--bg-color); border: 1px solid transparent;
+    display: block;
+    width: 100%;
+    padding: 12px 14px;
+    background-color: var(--bg-color);
+    border: 1px solid transparent;
     transition: background-color 0.2s ease, border-color 0.2s ease;
-    margin-bottom: 5px; border-radius: 4px;
+    margin-bottom: 5px;
+    border-radius: 4px;
 }
 .multi-choice-option:hover { background-color: #f1f7ff; border-color: #c6dcfb; }
 [data-theme="dark"] .multi-choice-option:hover { background-color: #263447; }
-.multi-choice-option:has(input:checked) { background-color: #cfe3f9; }
-[data-theme="dark"] .multi-choice-option:has(input:checked) { background-color: #2c3e56; }
-.multi-choice-option label { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 16px; width: 100%; }
+.multi-choice-option:has(input[type="radio"]:checked) { background-color: #cfe3f9; }
+[data-theme="dark"] .multi-choice-option:has(input[type="radio"]:checked) { background-color: #2c3e56; }
+.multi-choice-option label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+}
 .multi-choice-option .opt-letter { font-weight: bold; min-width: 20px; }
-.multi-choice-option input { margin-right: 6px; transform: scale(1.2); }
+.multi-choice-option input[type="radio"] { margin-right: 6px; transform: scale(1.2); }
 .multi-choice-option.correct { background-color: #d4edda !important; border-color: var(--correct-color); }
 .multi-choice-option.incorrect { background-color: #f8d7da !important; border-color: var(--incorrect-color); }
 [data-theme="dark"] .multi-choice-option.correct { background-color: #14532d !important; }
@@ -320,30 +477,57 @@ body::after {
 
 .mcq-item { margin-bottom: 24px; }
 .mcq-item .q-stem { margin-bottom: 8px; }
-.group-hint { font-size: 13px; color: #888; margin: 4px 0 10px; }
 
 /* ===== Navigation Arrows ===== */
-.nav-arrows { position: fixed; bottom: 100px; right: 20px; display: flex; gap: 5px; z-index: 101; }
+.nav-arrows {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    display: flex;
+    gap: 5px;
+    z-index: 101;
+}
 .nav-arrow {
-    width: 50px; height: 50px; background: var(--text-color); color: var(--bg-color);
-    border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
-    font-size: 22px; font-weight: bold; transition: background-color 0.2s;
+    width: 50px;
+    height: 50px;
+    background: var(--text-color);
+    color: var(--bg-color);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: bold;
+    transition: background-color 0.2s;
 }
 .nav-arrow:hover { background: #555; }
 .nav-arrow:disabled { background: #ccc; cursor: not-allowed; }
 
 /* ===== Bottom Navigation ===== */
 .nav-row {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: var(--bg-color); border-top: 1px solid var(--border-color);
-    padding: 0; display: flex; align-items: center; height: 80px; z-index: 100;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-color);
+    border-top: 1px solid var(--border-color);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    height: 80px;
+    z-index: 100;
     transition: background-color 0.3s, border-color 0.3s;
-    overflow-x: auto; overflow-y: hidden; white-space: nowrap; -webkit-overflow-scrolling: touch;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
 }
 .footer__questionWrapper__1tZ46 { display: flex; align-items: center; margin-right: 20px; flex-shrink: 0; }
 .footer__questionNo__3WNct {
     background: none; border: none; padding: 10px 15px; font-size: 16px; font-weight: 600;
-    color: var(--text-color); cursor: pointer; display: flex; align-items: center; gap: 5px; transition: background-color 0.2s;
+    color: var(--text-color); cursor: pointer; display: flex; align-items: center; gap: 5px;
+    transition: background-color 0.2s;
 }
 .footer__questionNo__3WNct:hover { background-color: var(--secondary-bg); }
 .section-prefix { font-size: 16px; }
@@ -374,27 +558,48 @@ body::after {
 .footer__deliverButton__3FM07.success:hover { background-color: #218838; border-color: #1e7e34; }
 
 .hidden { display: none; }
+
 .question { margin-bottom: 40px; }
 .question-prompt { margin-bottom: 20px; }
 
 .part-header {
-    background-color: var(--secondary-bg); padding: 15px; border-radius: 5px;
-    margin-bottom: 20px; border: 1px solid var(--border-color);
+    background-color: var(--secondary-bg);
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
 }
 .part-header p { margin: 0; }
-.questions-container { width: 100%; max-width: 860px; }
 
-/* ===== Selection Toolbar ===== */
+.questions-container { width: 100%; max-width: 820px; }
+
+/* ===== Selection Toolbar (appears on text selection) ===== */
 #selection-toolbar {
-    position: absolute; display: none; gap: 4px; background: var(--bg-color);
-    border: 1px solid var(--border-color); border-radius: 6px; padding: 4px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.18); z-index: 1500;
+    position: absolute;
+    display: none;
+    gap: 4px;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 4px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+    z-index: 1500;
 }
 #selection-toolbar button {
-    background: var(--primary-color); color: #fff; border: none; border-radius: 4px;
-    padding: 6px 12px; font-size: 13px; font-weight: 600; cursor: pointer;
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
 }
-#selection-toolbar button.secondary { background: var(--secondary-bg); color: var(--text-color); border: 1px solid var(--border-color); }
+#selection-toolbar button.secondary {
+    background: var(--secondary-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
 #selection-toolbar button:hover { opacity: 0.9; }
 
 /* ===== Modal ===== */
@@ -422,7 +627,10 @@ body::after {
 .result-correct { color: var(--correct-color); font-weight: bold; }
 .result-incorrect { color: var(--incorrect-color); font-weight: bold; }
 
-.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
 
 @media (max-width: 1024px) {
     .main-container { flex-direction: column; }
@@ -434,8 +642,9 @@ body::after {
 }
 @media (max-width: 768px) {
     .answer-input { width: 90px; max-width: 110px; font-size: 14px; padding: 2px 4px; }
-    .flow-box { padding: 10px 12px; }
+    .matching-list li { flex-wrap: wrap; }
 }
+
 @keyframes flash { 0% { background-color: #e6f4ff; } 100% { background-color: transparent; } }
 .question.flash { animation: flash 1s ease-out; }
 </style>
@@ -444,7 +653,8 @@ body::after {
 
 <div class="header">
     <div class="header-left">
-        <img src="https://i.pinimg.com/736x/88/93/a8/8893a81fed78f6989142a13e3605c45e.jpg" alt="IELTS Logo" class="ielts-logo">
+        <img src="https://i.pinimg.com/736x/88/93/a8/8893a81fed78f6989142a13e3605c45e.jpg"
+            alt="IELTS Logo" class="ielts-logo">
         <a href="https://t.me/FOZILBEK_IELTS" target="_blank" class="telegram-link">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-.38.24-1.07.7-.96.66-1.89 1.28-1.89 1.28s-.17.11-.49.03c-.32-.08-.72-.26-1.16-.47-.54-.26-1.17-.53-1.17-.53s-.87-.55.62-1.14c.32-.13 1.96-.84 2.99-1.2 1.05-.37 2.86-1.01 2.86-1.01s1.02-.4 1.02 0z" fill="currentColor"/>
@@ -452,6 +662,7 @@ body::after {
             <span>@FOZILBEK_IELTS</span>
         </a>
     </div>
+
     <div class="header-icons">
         <button class="tool-btn" id="clear-all-btn" title="Clear all highlights">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 9h-2.29l3-3-1.42-1.42-3 3V5h-2v2.29l-3-3-1.42 1.42 3 3H5v2h2.29l-3 3 1.42 1.42 3-3V17h2v-2.29l3 3 1.42-1.42-3-3H17V9h-2zm-4 4h-2v-2h2v2z"/></svg>
@@ -476,51 +687,14 @@ body::after {
     </div>
 </div>
 
-
-<!-- ================= AUDIO PLAYER ================= -->
-<div class="audio-player-container">
-    <button id="play-pause-btn" class="player-btn" aria-label="Play / Pause">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-    </button>
-    <div class="progress-container">
-        <span id="current-time">0:00</span>
-        <input type="range" id="progress-bar" value="0" step="1" min="0" max="100" aria-label="Seek">
-        <span id="total-duration">0:00</span>
-    </div>
-    <div class="controls-container">
-        <div style="display:flex;align-items:center;">
-            <button id="volume-btn" class="player-btn" aria-label="Toggle mute">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                </svg>
-            </button>
-            <input type="range" id="new-volume-slider" min="0" max="1" step="0.01" value="1" aria-label="Volume">
-        </div>
-        <div class="speed-container">
-            <button id="speed-btn" class="player-btn">1x</button>
-            <div id="speed-options" class="hidden">
-                <div data-speed="0.5">0.5x</div>
-                <div data-speed="0.75">0.75x</div>
-                <div data-speed="1" class="active">1x</div>
-                <div data-speed="1.25">1.25x</div>
-                <div data-speed="1.5">1.5x</div>
-                <div data-speed="2">2x</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<audio id="global-audio-player" preload="metadata"
-       src="https://ia600807.us.archive.org/7/items/0719_20260723/0719.MP3"></audio>
-
 <div class="main-container">
+    <!-- Left Panel -->
     <div class="left-panel">
 
         <!-- ================= PART 1 ================= -->
         <div id="part-1" class="question-part">
             <div class="part-header">
-                <p><strong>Section 1</strong></p>
+                <p><strong>Part 1</strong></p>
                 <p>Listen and answer questions 1-10.</p>
             </div>
             <div class="questions-container">
@@ -528,40 +702,47 @@ body::after {
                     <div class="question-prompt">
                         <p><strong>Questions 1-10</strong></p>
                         <p>Complete the notes below.</p>
-                        <p>Write <strong>ONE WORD ONLY</strong> for each answer.</p>
+                        <p>Write <strong>ONE WORD AND/OR A NUMBER</strong> for each answer.</p>
                     </div>
 
                     <table class="notes-table">
-                        <tr><td class="table-title" colspan="2">Incident report</td></tr>
-                        <tr><td class="example-cell" colspan="2">Example</td></tr>
-                        <tr><td class="label-cell">Name:</td><td>Anna Lumley</td></tr>
-                        <tr><td class="label-cell">Telephone:</td><td><strong>1.</strong> <input type="text" id="q1" class="answer-input" placeholder="1" autocomplete="off"></td></tr>
-                        <tr><td class="label-cell">Date of arrival:</td><td><strong>2.</strong> <input type="text" id="q2" class="answer-input" placeholder="2" autocomplete="off"></td></tr>
-                        <tr><td class="label-cell">Address:</td><td>235 <strong>3.</strong> <input type="text" id="q3" class="answer-input" placeholder="3" autocomplete="off"> Road, East Sea</td></tr>
-                        <tr><td class="label-cell">The total value of insurance:</td><td>$ <strong>4.</strong> <input type="text" id="q4" class="answer-input" placeholder="4" autocomplete="off"></td></tr>
-                        <tr><td class="label-cell">Missing items:</td>
+                        <tr><td class="table-title" colspan="2">Theatre booking</td></tr>
+                        <tr>
+                            <td class="label-cell">Example:</td>
+                            <td>Booking for <em>Pirates</em></td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">Date:</td>
+                            <td>8th December (afternoon)</td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">Name:</td>
+                            <td>Fenella <strong>1.</strong> <input type="text" id="q1" class="answer-input" placeholder="1" autocomplete="off"></td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">Contact number:</td>
+                            <td>07796 892326</td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">Booking details:</td>
                             <td>
                                 <ul>
-                                    <li>lamps and chairs (not expensive)</li>
-                                    <li>furniture and <strong>5.</strong> <input type="text" id="q5" class="answer-input" placeholder="5" autocomplete="off"></li>
-                                    <li>a rocking horse, some <strong>6.</strong> <input type="text" id="q6" class="answer-input" placeholder="6" autocomplete="off"> and fruit bowls</li>
+                                    <li>Type of booking: <strong>2.</strong> <input type="text" id="q2" class="answer-input" placeholder="2" autocomplete="off"> with discount</li>
+                                    <li>tickets: 3 adults at <strong>3.</strong> <input type="text" id="q3" class="answer-input" placeholder="3" autocomplete="off"> pounds each</li>
+                                    <li>Children under 16 at <strong>4.</strong> <input type="text" id="q4" class="answer-input" placeholder="4" autocomplete="off"> pounds each</li>
+                                    <li>Requires seats on the <strong>5.</strong> <input type="text" id="q5" class="answer-input" placeholder="5" autocomplete="off"> row of the circle</li>
+                                    <li>one person uses a <strong>6.</strong> <input type="text" id="q6" class="answer-input" placeholder="6" autocomplete="off"></li>
+                                    <li>need to have good access to the <strong>7.</strong> <input type="text" id="q7" class="answer-input" placeholder="7" autocomplete="off"></li>
+                                    <li>Will collect the tickets from the <strong>8.</strong> <input type="text" id="q8" class="answer-input" placeholder="8" autocomplete="off"></li>
                                 </ul>
                             </td>
                         </tr>
-                        <tr><td class="label-cell">Items ordered:</td>
+                        <tr>
+                            <td class="label-cell">Meals:</td>
                             <td>
                                 <ul>
-                                    <li>a clock</li>
-                                    <li>a <strong>7.</strong> <input type="text" id="q7" class="answer-input" placeholder="7" autocomplete="off"></li>
-                                </ul>
-                            </td>
-                        </tr>
-                        <tr><td class="label-cell">Damaged items:</td>
-                            <td>
-                                <ul>
-                                    <li>the <strong>8.</strong> <input type="text" id="q8" class="answer-input" placeholder="8" autocomplete="off"> needs to be replaced</li>
-                                    <li>a <strong>9.</strong> <input type="text" id="q9" class="answer-input" placeholder="9" autocomplete="off"> of one of the dining chairs is split</li>
-                                    <li>four <strong>10.</strong> <input type="text" id="q10" class="answer-input" placeholder="10" autocomplete="off"> were broken</li>
+                                    <li>Several people are <strong>9.</strong> <input type="text" id="q9" class="answer-input" placeholder="9" autocomplete="off"></li>
+                                    <li>Food: <strong>10.</strong> <input type="text" id="q10" class="answer-input" placeholder="10" autocomplete="off"> (cheese and tomato)</li>
                                 </ul>
                             </td>
                         </tr>
@@ -573,101 +754,89 @@ body::after {
         <!-- ================= PART 2 ================= -->
         <div id="part-2" class="question-part hidden">
             <div class="part-header">
-                <p><strong>Section 2</strong></p>
+                <p><strong>Part 2</strong></p>
                 <p>Listen and answer questions 11-20.</p>
             </div>
             <div class="questions-container">
 
-                <div class="question" id="grp-1112">
+                <div class="question">
                     <div class="question-prompt">
-                        <p><strong>Questions 11 and 12</strong></p>
-                        <p>Choose <strong>TWO</strong> letters, <strong>A-E</strong>.</p>
-                        <p>Which <strong>TWO</strong> characteristics of the dinosaur exhibits does the speaker highlight?</p>
-                        <p class="group-hint">Select exactly two options.</p>
+                        <p><strong>Questions 11-15</strong></p>
+                        <p>Which choir does each of the following statements apply to?</p>
+                        <p><em>Choose the correct letter, A, B or C, for each statement.</em></p>
                     </div>
-                    <div class="options" style="margin-left: 20px;">
-                        <div class="multi-choice-option"><label><input type="checkbox" name="g1112" value="A"><span class="opt-letter">A</span> bone displays</label></div>
-                        <div class="multi-choice-option"><label><input type="checkbox" name="g1112" value="B"><span class="opt-letter">B</span> posted drawings</label></div>
-                        <div class="multi-choice-option"><label><input type="checkbox" name="g1112" value="C"><span class="opt-letter">C</span> interactive activities</label></div>
-                        <div class="multi-choice-option"><label><input type="checkbox" name="g1112" value="D"><span class="opt-letter">D</span> re-creations of creatures</label></div>
-                        <div class="multi-choice-option"><label><input type="checkbox" name="g1112" value="E"><span class="opt-letter">E</span> explanatory timelines</label></div>
+
+                    <div class="matching-key">
+                        <div class="key-title">Choirs</div>
+                        <div class="key-row"><span class="key-letter">A</span> Mitchelstown Choir</div>
+                        <div class="key-row"><span class="key-letter">B</span> The Blackvale Male Voice Choir</div>
+                        <div class="key-row"><span class="key-letter">C</span> The Caroline Singers</div>
                     </div>
+
+                    <p class="question-title">Statements</p>
+                    <ul class="matching-list">
+                        <li><span class="m-num">11.</span><span class="m-text">They specialise in a particular type of music</span>
+                            <select id="q11" class="matching-select"><option value=""></option><option value="A">A</option><option value="B">B</option><option value="C">C</option></select></li>
+                        <li><span class="m-num">12.</span><span class="m-text">They organise social events</span>
+                            <select id="q12" class="matching-select"><option value=""></option><option value="A">A</option><option value="B">B</option><option value="C">C</option></select></li>
+                        <li><span class="m-num">13.</span><span class="m-text">They have recently won a competition</span>
+                            <select id="q13" class="matching-select"><option value=""></option><option value="A">A</option><option value="B">B</option><option value="C">C</option></select></li>
+                        <li><span class="m-num">14.</span><span class="m-text">They have recently recorded their first CD</span>
+                            <select id="q14" class="matching-select"><option value=""></option><option value="A">A</option><option value="B">B</option><option value="C">C</option></select></li>
+                        <li><span class="m-num">15.</span><span class="m-text">They participate in charity events</span>
+                            <select id="q15" class="matching-select"><option value=""></option><option value="A">A</option><option value="B">B</option><option value="C">C</option></select></li>
+                    </ul>
                 </div>
 
                 <div class="question">
                     <div class="question-prompt" style="margin-top: 40px;">
-                        <p><strong>Questions 13-18</strong></p>
+                        <p><strong>Questions 16-20</strong></p>
                         <p>Choose the correct letter, <strong>A</strong>, <strong>B</strong> or <strong>C</strong>.</p>
                     </div>
 
                     <div class="mcq-item">
-                        <p class="q-stem"><strong>13.</strong> What is special about the Under the Sea exhibit?</p>
+                        <p class="q-stem"><strong>16.</strong> Elizabeth Arnold thinks people join a choir at work because it gives them a chance to</p>
                         <div class="options" style="margin-left: 20px;">
-                            <div class="multi-choice-option"><label><input type="radio" name="q13" value="A"><span class="opt-letter">A</span> It shows how dolphins swim by using models.</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q13" value="B"><span class="opt-letter">B</span> It contains a life-size display of a blue whale.</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q13" value="C"><span class="opt-letter">C</span> It compares the evolution of fish and other species.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q16" value="A"><span class="opt-letter">A</span> have a break from work.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q16" value="B"><span class="opt-letter">B</span> improve their singing.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q16" value="C"><span class="opt-letter">C</span> make business contacts.</label></div>
                         </div>
                     </div>
 
                     <div class="mcq-item">
-                        <p class="q-stem"><strong>14.</strong> What aspect of sharks does the model display in the shark area focus on?</p>
+                        <p class="q-stem"><strong>17.</strong> How does a company benefit from setting up a choir?</p>
                         <div class="options" style="margin-left: 20px;">
-                            <div class="multi-choice-option"><label><input type="radio" name="q14" value="A"><span class="opt-letter">A</span> their nature as hunters</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q14" value="B"><span class="opt-letter">B</span> how they raise infants</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q14" value="C"><span class="opt-letter">C</span> their cycle of life</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q17" value="A"><span class="opt-letter">A</span> improved relationships between co-workers</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q17" value="B"><span class="opt-letter">B</span> less sick leave taken by employees</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q17" value="C"><span class="opt-letter">C</span> increased commitment to the company</label></div>
                         </div>
                     </div>
 
                     <div class="mcq-item">
-                        <p class="q-stem"><strong>15.</strong> The plant life exhibits allow visitors to view displays of</p>
+                        <p class="q-stem"><strong>18.</strong> How many members does the John White choir have?</p>
                         <div class="options" style="margin-left: 20px;">
-                            <div class="multi-choice-option"><label><input type="radio" name="q15" value="A"><span class="opt-letter">A</span> gardening mechanics.</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q15" value="B"><span class="opt-letter">B</span> flora from diverse environments.</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q15" value="C"><span class="opt-letter">C</span> rare wildflower seeds.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q18" value="A"><span class="opt-letter">A</span> 5</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q18" value="B"><span class="opt-letter">B</span> 12</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q18" value="C"><span class="opt-letter">C</span> 19</label></div>
                         </div>
                     </div>
 
                     <div class="mcq-item">
-                        <p class="q-stem"><strong>16.</strong> At the Activity zone, human development is depicted through</p>
+                        <p class="q-stem"><strong>19.</strong> When do the choir have their rehearsals?</p>
                         <div class="options" style="margin-left: 20px;">
-                            <div class="multi-choice-option"><label><input type="radio" name="q16" value="A"><span class="opt-letter">A</span> movie screenings.</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q16" value="B"><span class="opt-letter">B</span> three-dimensional presentations.</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q16" value="C"><span class="opt-letter">C</span> staged demonstrations.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q19" value="A"><span class="opt-letter">A</span> before work</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q19" value="B"><span class="opt-letter">B</span> at lunch</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q19" value="C"><span class="opt-letter">C</span> after work</label></div>
                         </div>
                     </div>
 
                     <div class="mcq-item">
-                        <p class="q-stem"><strong>17.</strong> Alice's biometric access system will</p>
+                        <p class="q-stem"><strong>20.</strong> How does the company support the choir?</p>
                         <div class="options" style="margin-left: 20px;">
-                            <div class="multi-choice-option"><label><input type="radio" name="q17" value="A"><span class="opt-letter">A</span> use drivers' thumbprints to open car locks.</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q17" value="B"><span class="opt-letter">B</span> scan the driver's eyes to unlock the car.</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q17" value="C"><span class="opt-letter">C</span> turn on the ignition when someone sits in the car.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q20" value="A"><span class="opt-letter">A</span> by providing concert clothes</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q20" value="B"><span class="opt-letter">B</span> by funding social events</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q20" value="C"><span class="opt-letter">C</span> by paying for singing classes</label></div>
                         </div>
-                    </div>
-
-                    <div class="mcq-item">
-                        <p class="q-stem"><strong>18.</strong> The sponsorship from the university includes</p>
-                        <div class="options" style="margin-left: 20px;">
-                            <div class="multi-choice-option"><label><input type="radio" name="q18" value="A"><span class="opt-letter">A</span> financial support.</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q18" value="B"><span class="opt-letter">B</span> personal advising.</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q18" value="C"><span class="opt-letter">C</span> laboratory training.</label></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="question" id="grp-1920">
-                    <div class="question-prompt" style="margin-top: 40px;">
-                        <p><strong>Questions 19 and 20</strong></p>
-                        <p>Choose <strong>TWO</strong> letters, <strong>A-E</strong>.</p>
-                        <p>Which <strong>TWO</strong> characteristics of the proposal have specific requirements?</p>
-                        <p class="group-hint">Select exactly two options.</p>
-                    </div>
-                    <div class="options" style="margin-left: 20px;">
-                        <div class="multi-choice-option"><label><input type="checkbox" name="g1920" value="A"><span class="opt-letter">A</span> length</label></div>
-                        <div class="multi-choice-option"><label><input type="checkbox" name="g1920" value="B"><span class="opt-letter">B</span> punctuation</label></div>
-                        <div class="multi-choice-option"><label><input type="checkbox" name="g1920" value="C"><span class="opt-letter">C</span> file format</label></div>
-                        <div class="multi-choice-option"><label><input type="checkbox" name="g1920" value="D"><span class="opt-letter">D</span> graphics</label></div>
-                        <div class="multi-choice-option"><label><input type="checkbox" name="g1920" value="E"><span class="opt-letter">E</span> references</label></div>
                     </div>
                 </div>
             </div>
@@ -676,81 +845,102 @@ body::after {
         <!-- ================= PART 3 ================= -->
         <div id="part-3" class="question-part hidden">
             <div class="part-header">
-                <p><strong>Section 3</strong></p>
+                <p><strong>Part 3</strong></p>
                 <p>Listen and answer questions 21-30.</p>
             </div>
             <div class="questions-container">
 
                 <div class="question">
                     <div class="question-prompt">
-                        <p><strong>Questions 21-25</strong></p>
+                        <p><strong>Questions 21-26</strong></p>
                         <p>Choose the correct letter, <strong>A</strong>, <strong>B</strong> or <strong>C</strong>.</p>
                     </div>
+                    <p class="centered-title">Tourism research</p>
 
                     <div class="mcq-item">
-                        <p class="q-stem"><strong>21.</strong> Which topics does the speaker say he will talk about first?</p>
+                        <p class="q-stem"><strong>21.</strong> Mike suggests they use the word <em>area</em> to mean</p>
                         <div class="options" style="margin-left: 20px;">
-                            <div class="multi-choice-option"><label><input type="radio" name="q21" value="A"><span class="opt-letter">A</span> how to limit the dioxins we consume</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q21" value="B"><span class="opt-letter">B</span> the origin and effects of dioxins</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q21" value="C"><span class="opt-letter">C</span> why people in the US don't know about dioxins</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q21" value="A"><span class="opt-letter">A</span> geographical location.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q21" value="B"><span class="opt-letter">B</span> tourist site.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q21" value="C"><span class="opt-letter">C</span> research field.</label></div>
                         </div>
                     </div>
 
                     <div class="mcq-item">
-                        <p class="q-stem"><strong>22.</strong> The 'Dirty Dozen' is a group of chemicals which is very</p>
+                        <p class="q-stem"><strong>22.</strong> According to Eva, most people believe that culture</p>
                         <div class="options" style="margin-left: 20px;">
-                            <div class="multi-choice-option"><label><input type="radio" name="q22" value="A"><span class="opt-letter">A</span> dangerous to the environment.</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q22" value="B"><span class="opt-letter">B</span> instrumental in harming food production.</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q22" value="C"><span class="opt-letter">C</span> common in nature.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q22" value="A"><span class="opt-letter">A</span> refers to long-established events and places.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q22" value="B"><span class="opt-letter">B</span> includes modern forms of art and entertainment.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q22" value="C"><span class="opt-letter">C</span> is becoming less linked to particular regions.</label></div>
                         </div>
                     </div>
 
                     <div class="mcq-item">
-                        <p class="q-stem"><strong>23.</strong> Dioxins can be created by a number of human activities including</p>
+                        <p class="q-stem"><strong>23.</strong> Why should they carry out about 200 surveys?</p>
                         <div class="options" style="margin-left: 20px;">
-                            <div class="multi-choice-option"><label><input type="radio" name="q23" value="A"><span class="opt-letter">A</span> the use of chemical pesticides on farms.</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q23" value="B"><span class="opt-letter">B</span> the burning of trash.</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q23" value="C"><span class="opt-letter">C</span> the burying garbage.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q23" value="A"><span class="opt-letter">A</span> to provide information about a range of events</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q23" value="B"><span class="opt-letter">B</span> to be able to meet the deadline</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q23" value="C"><span class="opt-letter">C</span> to get valid results</label></div>
                         </div>
                     </div>
 
                     <div class="mcq-item">
-                        <p class="q-stem"><strong>24.</strong> Most of human exposure to dioxins</p>
+                        <p class="q-stem"><strong>24.</strong> Which groups of people do they decide to interview?</p>
                         <div class="options" style="margin-left: 20px;">
-                            <div class="multi-choice-option"><label><input type="radio" name="q24" value="A"><span class="opt-letter">A</span> is from the food they consume.</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q24" value="B"><span class="opt-letter">B</span> comes from contaminated soil.</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q24" value="C"><span class="opt-letter">C</span> results from handling pesticides and herbicides.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q24" value="A"><span class="opt-letter">A</span> domestic tourists and local residents</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q24" value="B"><span class="opt-letter">B</span> local residents and international tourists</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q24" value="C"><span class="opt-letter">C</span> international and domestic tourists</label></div>
                         </div>
                     </div>
 
                     <div class="mcq-item">
-                        <p class="q-stem"><strong>25.</strong> High levels of dioxins in poultry</p>
+                        <p class="q-stem"><strong>25.</strong> Mike expresses concern at having to ask about</p>
                         <div class="options" style="margin-left: 20px;">
-                            <div class="multi-choice-option"><label><input type="radio" name="q25" value="A"><span class="opt-letter">A</span> were traced back to Belgium.</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q25" value="B"><span class="opt-letter">B</span> were caused by the food given to animals.</label></div>
-                            <div class="multi-choice-option"><label><input type="radio" name="q25" value="C"><span class="opt-letter">C</span> were the result of hazardous waste.</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q25" value="A"><span class="opt-letter">A</span> the amount of money a person has spent</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q25" value="B"><span class="opt-letter">B</span> a person's age</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q25" value="C"><span class="opt-letter">C</span> a person's occupation</label></div>
+                        </div>
+                    </div>
+
+                    <div class="mcq-item">
+                        <p class="q-stem"><strong>26.</strong> Which form will their results be presented in?</p>
+                        <div class="options" style="margin-left: 20px;">
+                            <div class="multi-choice-option"><label><input type="radio" name="q26" value="A"><span class="opt-letter">A</span> a table</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q26" value="B"><span class="opt-letter">B</span> a pie chart</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q26" value="C"><span class="opt-letter">C</span> a graph</label></div>
                         </div>
                     </div>
                 </div>
 
                 <div class="question">
                     <div class="question-prompt" style="margin-top: 40px;">
-                        <p><strong>Questions 26-30</strong></p>
-                        <p>Complete the flow chart below.</p>
-                        <p>Write <strong>ONE WORD ONLY</strong> for each answer.</p>
+                        <p><strong>Questions 27-30</strong></p>
+                        <p>Which tourist attraction will be highlighted in each of the following countries?</p>
+                        <p><em>Choose FOUR answers from the box and write the correct letter, A-G, for each country.</em></p>
                     </div>
 
-                    <div class="flow-chart">
-                        <div class="flow-box">Wrasse fish get together <strong>26.</strong> <input type="text" id="q26" class="answer-input" placeholder="26" autocomplete="off"> the reef and wait for other fish.</div>
-                        <div class="flow-arrow">&#11015;</div>
-                        <div class="flow-box">Wrasse fish come towards the moray eels when they are <strong>27.</strong> <input type="text" id="q27" class="answer-input" placeholder="27" autocomplete="off"></div>
-                        <div class="flow-arrow">&#11015;</div>
-                        <div class="flow-box">The cleaner fish eat parasites and <strong>28.</strong> <input type="text" id="q28" class="answer-input" placeholder="28" autocomplete="off"> from the eels' gills.</div>
-                        <div class="flow-arrow">&#11015;</div>
-                        <div class="flow-box">Dead <strong>29.</strong> <input type="text" id="q29" class="answer-input" placeholder="29" autocomplete="off"> are picked off the eels by the wrasse fish.</div>
-                        <div class="flow-arrow">&#11015;</div>
-                        <div class="flow-box">The eels allow the wrasse fish to clean the interiors of their <strong>30.</strong> <input type="text" id="q30" class="answer-input" placeholder="30" autocomplete="off"></div>
+                    <div class="matching-key" style="max-width: 460px;">
+                        <div class="key-title">Tourist Attractions</div>
+                        <div class="key-row"><span class="key-letter">A</span> ancient buildings</div>
+                        <div class="key-row"><span class="key-letter">B</span> contemporary art gallery</div>
+                        <div class="key-row"><span class="key-letter">C</span> food festival</div>
+                        <div class="key-row"><span class="key-letter">D</span> museums displaying traditional objects</div>
+                        <div class="key-row"><span class="key-letter">E</span> national parks</div>
+                        <div class="key-row"><span class="key-letter">F</span> theatre performances</div>
+                        <div class="key-row"><span class="key-letter">G</span> traditional dances</div>
                     </div>
+
+                    <p class="question-title">Countries</p>
+                    <ul class="matching-list">
+                        <li><span class="m-num">27.</span><span class="m-text">Mexico</span>
+                            <select id="q27" class="matching-select"><option value=""></option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option></select></li>
+                        <li><span class="m-num">28.</span><span class="m-text">Greece</span>
+                            <select id="q28" class="matching-select"><option value=""></option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option></select></li>
+                        <li><span class="m-num">29.</span><span class="m-text">Britain</span>
+                            <select id="q29" class="matching-select"><option value=""></option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option></select></li>
+                        <li><span class="m-num">30.</span><span class="m-text">India</span>
+                            <select id="q30" class="matching-select"><option value=""></option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option></select></li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -758,7 +948,7 @@ body::after {
         <!-- ================= PART 4 ================= -->
         <div id="part-4" class="question-part hidden">
             <div class="part-header">
-                <p><strong>Section 4</strong></p>
+                <p><strong>Part 4</strong></p>
                 <p>Listen and answer questions 31-40.</p>
             </div>
             <div class="questions-container">
@@ -766,42 +956,43 @@ body::after {
                     <div class="question-prompt">
                         <p><strong>Questions 31-40</strong></p>
                         <p>Complete the notes below.</p>
-                        <p>Write <strong>ONE WORD ONLY</strong> for each answer.</p>
+                        <p>Write <strong>NO MORE THAN TWO WORDS</strong> for each answer.</p>
                     </div>
 
                     <div class="framed-notes">
-                        <h3>HISTORY AND DEVELOPMENT OF RAILWAYS</h3>
+                        <h3>Working as a Patent Attorney</h3>
 
-                        <p class="group-head">Railway development in Great Britain</p>
+                        <p class="group-head">Getting a patent</p>
                         <ul>
-                            <li>The first locomotive invented by Richard Trevithick was not a <strong>31.</strong> <input type="text" id="q31" class="answer-input" placeholder="31" autocomplete="off"> success.</li>
-                            <li>Large-scale rail construction began in the UK in the 1830s due to industrialisation. Industrial areas needed <strong>32.</strong> <input type="text" id="q32" class="answer-input" placeholder="32" autocomplete="off"> to port cities, which trains provided cheaply and quickly.</li>
+                            <li>Nowadays most patents are applied for by a <strong>31.</strong> <input type="text" id="q31" class="answer-input" placeholder="31" autocomplete="off"></li>
+                            <li>The invention has to be <strong>32.</strong> <input type="text" id="q32" class="answer-input" placeholder="32" autocomplete="off"> in order to be patented</li>
+                            <li>A detailed <strong>33.</strong> <input type="text" id="q33" class="answer-input" placeholder="33" autocomplete="off"> of the invention is required</li>
                         </ul>
 
-                        <p class="group-head">Global expansion of railway systems</p>
+                        <p class="group-head">Requirements</p>
                         <ul>
-                            <li>Global railway construction allowed <strong>33.</strong> <input type="text" id="q33" class="answer-input" placeholder="33" autocomplete="off"> trade to grow rapidly. Rapid railway development occurred in North America in the 19th century.</li>
-                            <li><strong>34.</strong> <input type="text" id="q34" class="answer-input" placeholder="34" autocomplete="off"> discovery in the West provided further motivation for building railroads across the continent.</li>
+                            <li>Academic qualifications e.g. Chemistry or <strong>34.</strong> <input type="text" id="q34" class="answer-input" placeholder="34" autocomplete="off"></li>
+                            <li>People with very good <strong>35.</strong> <input type="text" id="q35" class="answer-input" placeholder="35" autocomplete="off"></li>
+                            <li>Knowledge of a different <strong>36.</strong> <input type="text" id="q36" class="answer-input" placeholder="36" autocomplete="off"> (desirable)</li>
                         </ul>
 
-                        <p class="group-head">Historic occasions affecting railways</p>
+                        <p class="group-head">Advantages of the job</p>
                         <ul>
-                            <li>Introduced in 1912, diesel fuel allowed locomotives to transport larger weights much faster.</li>
-                            <li>Extremely long journeys could now be made in a few <strong>35.</strong> <input type="text" id="q35" class="answer-input" placeholder="35" autocomplete="off"></li>
-                            <li>Railways were military <strong>36.</strong> <input type="text" id="q36" class="answer-input" placeholder="36" autocomplete="off"> during the two world wars and were rebuilt afterward.</li>
+                            <li>Interesting - uses range of expertise</li>
+                            <li>Good <strong>37.</strong> <input type="text" id="q37" class="answer-input" placeholder="37" autocomplete="off"></li>
                         </ul>
 
-                        <p class="group-head">Reasons for growth in train transport</p>
+                        <p class="group-head">Disadvantages of the job</p>
                         <ul>
-                            <li><strong>37.</strong> <input type="text" id="q37" class="answer-input" placeholder="37" autocomplete="off"> needed a more efficient way of moving their goods during periods of industrialisation.</li>
-                            <li>Railways also allowed some Europeans to manage their <strong>38.</strong> <input type="text" id="q38" class="answer-input" placeholder="38" autocomplete="off"></li>
+                            <li>Sometimes quite <strong>38.</strong> <input type="text" id="q38" class="answer-input" placeholder="38" autocomplete="off"></li>
+                            <li>Location is inflexible</li>
                         </ul>
 
-                        <p class="group-head">Current trains and railway systems</p>
+                        <p class="group-head">Possible places of work</p>
                         <ul>
-                            <li>The fuels used for trains are now <strong>39.</strong> <input type="text" id="q39" class="answer-input" placeholder="39" autocomplete="off"> and better for the environment.</li>
-                            <li>The rapid improvement of <strong>40.</strong> <input type="text" id="q40" class="answer-input" placeholder="40" autocomplete="off"> railway networks in several continents made rail highly popular.</li>
-                            <li>Trains may become more popular because they are fast, efficient, and affordable.</li>
+                            <li>Large <strong>39.</strong> <input type="text" id="q39" class="answer-input" placeholder="39" autocomplete="off"> organisations</li>
+                            <li>Private practices</li>
+                            <li><strong>40.</strong> <input type="text" id="q40" class="answer-input" placeholder="40" autocomplete="off"> departments</li>
                         </ul>
                     </div>
                 </div>
@@ -822,140 +1013,122 @@ body::after {
 <div id="transcription-data" style="display:none;">
     <div data-part="1">
         <strong>SECTION 1</strong><br><br>
-        You will hear a woman phoning to complain about the items she ordered last week.<br><br>
-        Hello, you are through to the Complaints Department at Clifton Antiques. Before we begin, I'll just need to take a few details from you. Is that OK?<br>
-        Yes, of course, no problem.<br>
-        OK, can I please have your full name?<br>
-        My name is Anna Lumley. That's Anna, L-U-M-L-E-Y. <em>(Example)</em><br>
-        Right. And could you give me a contact number which we can use to reach you during the week?<br>
-        My mobile phone number is <span class="highlight">077876345</span>. [Q1 &rarr; 077876345]<br>
-        OK, great. How can I help you today, Anna?<br>
-        I ordered a large number of items from you last week on the 20th of February and was expecting them to be delivered on the <span class="highlight">27th</span>. [Q2 &rarr; 27 February] However, only half of the shipment has arrived. I just want to make sure that they haven't been lost in transit.<br>
-        Right, OK. I'm sorry for the inconvenience. Let me track the parcel and see if I can find out when you should expect to receive the rest of your items. What did you list as the delivery address?<br>
-        I arranged for the parcel to be delivered from your warehouse on Ardal Road to my work address at 235 <span class="highlight">Ackendale</span> Road. [Q3 &rarr; Akendale]<br>
-        What was it, sorry?<br>
-        235 Ackendale Road, A-K-E-N-D-A-L-E. East Sea.<br>
-        East Sea? Right, OK. I've found your parcel here on our system. I can see that you've received your shipment. However, nothing is mentioned about the missing items. I would advise that you wait for two days, and if the other items don't arrive then, it may be necessary for you to claim insurance coverage for the value of the items. How much are the missing items worth?<br>
-        They cost me $34,500.<br>
-        Well, the insurance company will cover you for 10% of the value, so you could claim <span class="highlight">$3,450</span> from them. [Q4 &rarr; 3,450] Just fill in the form on our website, and when the loss is confirmed, you'll receive the money within one week. We will refund the rest of the money to you within a month, so you won't suffer a financial loss.<br>
-        That sounds fine.<br><br>
+        Good morning, Cornmarket Theatre.<br>
+        Oh, good morning. I'd like to ask about making a booking for the performance of Pirates. I'd like to make a booking for the afternoon performance on December the eighth.<br>
+        I'll just check on my computer. Good news &ndash; you're booking well ahead of time, so there are lots of seats available for that performance.<br>
+        Great.<br>
+        Now, if I can just start by taking a few details. What's your name, please?<br>
+        It's Fenella <span class="highlight">Bittens</span>. B-I-double-T-E-N-S.<br>
+        Now, can I take a contact number?<br>
+        It's 07796 892326.<br>
+        Lovely. So how many tickets would you like?<br>
+        20, please.<br>
+        So that's a <span class="highlight">group</span> booking. Does that mean I get a discount?<br>
+        Yes. Are they all for adults?<br>
+        Actually, only three are adults.<br>
+        Right. So you get a discount of 10% on those tickets, which makes it <span class="highlight">23</span> pounds per person. All the tickets are the same price wherever you sit, and the rest are all under 16. So instead of 15 pounds per person, that will be <span class="highlight">12.50</span>.<br>
+        Oh, that's good.<br><br>
 
-        I'll just need to take a list of the missing items from you, so we can check it against our records. Is that OK?<br>
-        Sure, no problem. Unfortunately, a lot of the items are one-of-a-kind and therefore irreplaceable. There were some small items, such as lamps and chairs, that aren't very valuable. However, there was a large item of antique furniture and a bag full of first edition <span class="highlight">books</span>, which were among the first ever to be printed on a press. [Q5 &rarr; books]<br>
-        Right, OK. Is there anything else?<br>
-        Yes. I also purchased a Victorian rocking horse for my daughter, some large oil <span class="highlight">paintings</span> originating from the Edwardian period, and a few decorative fruit bowls. [Q6 &rarr; paintings]<br>
-        Right, OK. I've taken a list of your missing items, so I'll phone the warehouse to see if any of them are lying around.<br>
-        Ah, I almost forgot. There are a couple of other pieces that I've spotted on your website, and would like to order. Can I do that now?<br>
-        Of course, no problem. Can you give me a description of the items that you're looking to purchase?<br>
-        There was a gold clock and a golden framed vintage <span class="highlight">mirror</span>. [Q7 &rarr; mirror]<br>
-        OK, perfect. I'll charge the items to the payment card that you used before, and they should be delivered to you within the next week. Is there anything else that I can do for you today?<br>
-        Yes. Two of the items that I received in the shipment are damaged, so I need to make a claim for a partial refund.<br>
-        Oh, I'm sorry to hear that. I need to take down a few details of the actual damage over the phone before you put in a full report. Can you tell me which pieces are damaged?<br>
-        A drawer is missing from the antique mahogany <span class="highlight">desk</span>, and there was also a dent on one of the corners, so it's unusable. [Q8 &rarr; desk]<br>
-        I see. Any idea of the price of repairing it?<br>
-        No, well, I don't think it can be repaired. I will need a new one.<br>
-        OK, I'll make a note of that, and we'll see what we can do. Anything else?<br>
-        I also purchased a set of dining chairs with navy leather padding. However, the colour is faded, and one of the <span class="highlight">legs</span> has completely split down the middle. [Q9 &rarr; leg]<br>
-        OK, are there any other damaged pieces?<br>
-        Yes, I purchased a set of Chinese crockery to furnish my dining room table. However, when I opened the box, I found that a cup was missing, and that some <span class="highlight">plates</span> had smashed. Four, actually. [Q10 &rarr; plates]<br>
-        And is that all of the items?<br>
-        Yes, I think that's all.<br>
-        Right, I'll calculate the value of the damaged items, and we'll issue you a refund.<br>
-        OK, thank you so much for your help.<br>
-        No problem at all. It was my pleasure. Goodbye.
+        Would you like to sit in the stalls?<br>
+        I'd prefer the circle, if that's possible.<br>
+        Well, I can give you 20 seats more or less together &ndash; really nice seats on the middle row.<br>
+        No, I think we'd need to be right at the <span class="highlight">back</span>, actually.<br>
+        That's no problem. There are plenty of seats there.<br>
+        That's good, because we have one child who is a <span class="highlight">wheelchair</span> user.<br>
+        Right. Well, we have very good arrangements for our disabled customers.<br>
+        Well, the main thing is we want to be able to get to the <span class="highlight">lift</span> easily.<br>
+        That won't be any problem. I'll put you in for more or less the whole row.<br>
+        Good. Now, would it be possible to pay for the tickets by credit card?<br>
+        No problem. Do you want me to send you the tickets, or pick them up from the box office at the theatre?<br>
+        Parking's so difficult near the theatre in the daytime.<br>
+        Well, we've now got an arrangement that you can pick up tickets in the <span class="highlight">library</span>.<br>
+        That sounds good, fine. I'll make a note that you'll do that.<br>
+        Great. Now, I read in a brochure that you can also order theatre meals.<br>
+        That's right. With such a large party, it's probably a good idea if you order what you want in advance.<br>
+        Well, I've got a good idea about what everyone would like. Could you put me through to the caf&eacute;?<br>
+        Well, if you want, I can take down the order now.<br>
+        That'd be great, thanks.<br>
+        No problem. Well, we've got a few children in the group who are <span class="highlight">vegetarian</span>.<br>
+        Okay, I'll make a note of that. And I wanted to check if you do any hot dishes.<br>
+        I'm afraid not. But we do have <span class="highlight">pizzas</span>. They're even better.<br>
+        Let's go for those for all of us &ndash; cheese and tomato.<br>
+        Fine. And what would everyone like to drink?
     </div>
 
     <div data-part="2">
         <strong>SECTION 2</strong><br><br>
-        You will hear a guide at a natural history museum talking to a group of visitors.<br><br>
-        Good morning, ladies and gentlemen. We're very happy to welcome you to the Museum of Natural History today. My name is Patrick, and I'll be your guide for today's tour.<br>
-        Before we get started, I'll first go over a few of the museum's highlights. To start with, our dinosaur exhibits are some of the most popular in the museum. <span class="highlight">These include actual skeletons and remains from these prehistoric animals.</span> [Q11/12 &rarr; A] There are also numerous interactive displays which share information about the different dinosaur species. And be sure not to miss <span class="highlight">the life-size replica models of the colossal Tyrannosaurus and Brontosaurus</span> on exhibit just beyond the prehistoric timeline display in the main foyer. [Q11/12 &rarr; D]<br><br>
+        And for our regular spot on things to do in town, here's our reporter Samuel Cooper.<br>
+        Thank you. Well, feeling a bit apprehensive about my ability to sing in tune, I recently headed off for rehearsals at the town's three biggest choirs: Mitchelstown Choir, the Blackvale Male Voice Choir, and the Caroline Singers. I received a very warm welcome at all three choirs &ndash; they are always on the lookout for new and enthusiastic singers.<br>
+        Now, obviously, deciding which choir to join will depend to some extent on your taste in music. Blackvale caters for most musical tastes, as it has a hugely varied repertoire, as does Mitchelstown. If you're after a more classical feel, the <span class="highlight">Caroline Singers tend to focus on madrigals</span> &ndash; that's unaccompanied singing without any instruments. [Q11 &rarr; C]<br>
+        If you want to meet people who share an interest in music, <span class="highlight">Mitchelstown Choir</span> is a good place to start. Apart from their own performances, they also arrange <span class="highlight">group visits to see operas and attend music festivals</span>, so it can be a great way to make friends. [Q12 &rarr; A]<br>
+        But it's not just a chance to develop a skill or make friends that's on offer. You could win a gold medal &ndash; Mitchelstown are hoping to get to the final at the melody competition in Atlanta, and <span class="highlight">Blackvale are the current holders of the Countering Male Voice Choir Award</span>, which was presented to them last month. [Q13 &rarr; B]<br>
+        You can also be a part of a recording deal. <span class="highlight">Mitchelstown has just joined</span> Blackvale and the Caroline Singers as recording artists, with their first CD due in shops in December. [Q14 &rarr; A]<br>
+        And if all of that isn't enough, you can also benefit the local community by helping to raise funds for good causes. Mitchelstown regularly performs at functions helping the disabled and the elderly, while <span class="highlight">Blackvale donates a percentage of its profits to certain local charities</span>. [Q15 &rarr; B]<br><br>
 
-        We have a few amazing displays about ocean life as well. Our life-size model of a blue whale is in the main courtyard, and we have a spectacular under-the-sea room which includes lots of models of fish and mammals. <span class="highlight">Our dolphin display is possibly our most famous. It draws loads of people to see actual-size models of the creatures and learn about how they swim.</span> [Q13 &rarr; A]<br>
-        We also have a display about fish evolution, which is especially interesting as it shows how they started as simple organisms and developed into complex species. And we have a very interesting display focusing on <span class="highlight">the life cycle of sharks. It shows how they develop from an embryo in an egg until they are fully grown</span> and features models of infant sharks, adolescents and fearsome adult hunters. [Q14 &rarr; C]<br>
-        And then there is our plant life exhibit, which is contained in the museum's indoor botanical garden. <span class="highlight">Colourful and rare species of plants, trees and shrubs have been imported and put on display for you to view, including specimens from the Amazon rainforest and the tundra of Greenland.</span> [Q15 &rarr; B] We are proud to house the country's rarest assortment of wildflowers, many of which you can grow yourself with seeds from our shop.<br>
-        One special area of note is our activity zone, which has several interactive displays and activities. <span class="highlight">You can watch a short film on the evolution of our human ancestors, showing how we evolved through time.</span> [Q16 &rarr; A] And also check out our stage area, which hosts a variety of interesting presentations, demonstrations and talks throughout the day. In addition, visit our 3D planetarium, where you can view incredible images of the stars and universe.<br><br>
-
-        You will hear a student talking to a professor about a car technology competition.<br><br>
-        Professor Brown, I'm hoping to participate in the national car technology competition.<br>
-        Certainly, Alice. The idea submission deadline is next Thursday, though. Do you already have an idea in mind?<br>
-        Oh, I have a couple of ideas. One is for a biometric access system. This would allow only particular users to unlock, start and drive the vehicle by using sensors.<br>
-        Interesting idea. How would that work exactly?<br>
-        Well, it would require the use of a scanner to access the vehicle and interior sensors to scan the eyes of drivers for retinal confirmation. <span class="highlight">Drivers would place a thumb on the outdoor scanner to unlock the vehicle</span> and the retinal sensor would allow them to turn on the ignition. [Q17 &rarr; A]<br>
-        That might be complicated. Do you have any ideas on how that sensor might work?<br>
-        I was thinking about embedding it in the rear-view mirror. The driver would simply look into the mirror and the sensor would scan their retina. If the person is authorized to use the vehicle, the ignition would automatically turn on.<br>
-        Sounds impressive. I think you should go ahead with that idea. Is there anything else you need help with?<br>
-        Well, actually the entrance fee is higher than I expected.<br>
-        Oh, there actually is a sponsorship from the university that you may be eligible for and as far as I know, you'll be able to do that. Then <span class="highlight">the cost of $200 for entering the competition would be lifted</span>. [Q18 &rarr; A] And of course, you'd be able to use materials for the project at our lab facilities. You can pick up a form to apply for the sponsorship at the academic office.<br>
-        Excellent. And what is required for the application?<br>
-        <span class="highlight">You'll first need to submit a proposal, no longer than one page</span>, to the Dean of the Engineering College by this Wednesday. [Q19/20 &rarr; A] If he thinks your idea is intriguing enough, then he'll meet with you in person to discuss some additional details about it.<br>
-        All right. I suppose I ought to get started on typing my proposal then.<br>
-        Oh, and for your reference, <span class="highlight">the proposal must include a rough design or sketch of your idea. Otherwise, the Dean won't accept it.</span> [Q19/20 &rarr; D] It's a very particular requirement, but it's because he prefers to look at papers with graphical information. The proposal can be structured as you like and in any file format. And you can list references any way you want as well.<br>
-        That's exactly what I was going to enquire about next. Actually, would you have some time to meet either today or Tuesday to provide me with some guidance on how to draft the proposal?<br>
-        Certainly. I'll be available at my office after 4pm this Tuesday.<br>
-        Great. I'll come by your office at 4.30 on Tuesday. Thanks.
+        You may feel unable to join a choir because you're worried you'd struggle to find the time to attend rehearsals. Well, there is a solution &ndash; start your own choir at work. I went to find out about the one at the accountants John White. The choir's organizer, Elizabeth Arnold, told me the reason she thinks people like the choir. She said that while the thought of big networking opportunities might be at the back of some people's mind, it's <span class="highlight">having the opportunity to switch off and focus on something completely different</span> that they're after. [Q16 &rarr; A]<br>
+        Companies like John White encourage their employees to set up choirs at work because it can help to create a healthier working atmosphere. For example, <span class="highlight">people who previously didn't get on can find they have something in common</span>. [Q17 &rarr; A]<br>
+        Elizabeth Arnold also stresses that you don't need a lot of people to get the choir off the ground. They started off four years ago with just five people; that's now risen to <span class="highlight">19</span>, while their average attendance at rehearsals is 12. [Q18 &rarr; C]<br>
+        Many people don't have time to go to rehearsals outside work. However, they find the time to go to them while they're at work. At John White, they found the <span class="highlight">middle of the day works best</span>, because not everyone works the same hours, so scheduling early morning rehearsals can be problematic. The same is true for late afternoon. [Q19 &rarr; B]<br>
+        Supporting their choir is something that John White are very happy to do. Although members pay a joining fee to cover the cost of refreshments and wear special concert shirts, the company organizes regular sessions with a <span class="highlight">professional vocal coach free of charge</span> to members of the choir. [Q20 &rarr; C]
     </div>
 
     <div data-part="3">
         <strong>SECTION 3</strong><br><br>
-        Good morning, everyone. I'm going to present my research project about dioxins today. First, I'd like to offer a short explanation as to why I chose dioxins as my presentation topic.<br>
-        In the United States, we hear a lot about dioxins, but <span class="highlight">not everybody understands where they come from or why they are harmful. I'd like to explain those two topics first</span>, and then talk a little bit about how to avoid exposure to these harmful chemicals and what we can do to decrease the presence of dioxins in our land, air, and even food. [Q21 &rarr; B]<br>
-        First of all, what are dioxins? Well, they are considered one of the dirty dozen, which is <span class="highlight">a group of organic pollutants that are extremely dangerous to nature and habitats</span>. [Q22 &rarr; A] Researchers have identified about 419 different types of dioxin compounds in existence, but only about 30 of those are thought to contain a significant amount of toxicity.<br>
-        Let's now discuss where they come from. Dioxins are produced from either industrial processes or natural processes. For instance, they form during the production of herbicides and pesticides sprayed on the ground. <span class="highlight">They are also formed during combustion activity such as trash burning.</span> [Q23 &rarr; B] Garbage plays a large part in the creation of dioxins. The natural processes that would create dioxins include volcanic explosions and large forest fires.<br>
-        Now, how are we exposed to dioxins? What most people don't know is that dioxins are found worldwide and we've all been exposed to them. The highest levels of dioxins are found in soil, sediments, dairy products, meat, and fish. In fact, <span class="highlight">over 90% of human exposure to dioxin is through food</span> or the ingredients in our food, the vast majority. [Q24 &rarr; A] This is because dioxins accumulate in the fatty tissue of animals that are later sold as food to humans.<br>
-        For example, a study in Belgium from 1999 found high levels of dioxins in poultry and eggs, <span class="highlight">which was traced back to animal feed in particular locations</span>. [Q25 &rarr; B] Furthermore, there are also subgroups of people that are particularly susceptible to dioxin exposure from other sources besides food. In particular, people who work at incineration plants or hazardous waste sites are definitely exposed to an abnormally high amount of dioxins.<br><br>
+        Hi, Eva, is this a good time for us to look at our research project? Our tutor told us to keep the focus narrow. So what about we go for why people choose to go to certain places and attractions, and leave the rest out?<br>
+        You're right. Otherwise, we'll have far too much information to cope with.<br>
+        Okay, so what about the survey? I've looked through the ideas we had. I think it's not clear how we use the word 'area'. Sometimes it seems to mean a place, other times the field of our research, and even tourist attraction in some cases.<br>
+        Oh, I think that's my fault. I typed out our notes. It's probably best to use it <span class="highlight">for place, in the sense of province or whatever</span>. [Q21 &rarr; A]<br>
+        Yes, I think so. We decided to concentrate on culture and tourism. I wonder if we're really saying culture in the same way as most people do. On our list I see you've put the Round Music Festival, which is contemporary music. I thought we were going to be looking at more traditional forms of culture.<br>
+        That would be confirming these old-fashioned ideas that <span class="highlight">culture has to be something that's at least 100 years old. But that is what most people think</span>. [Q22 &rarr; A]<br>
+        Well, let's not get into an argument about that right now. Let's think about the number of completed questionnaires we need. In total, how many do you think &ndash; 100? 200? And over how many different events?<br>
+        Hmm, our tutor said we should have at least <span class="highlight">200; otherwise, the information won't actually mean that much</span>. And I think it's not practical to try to go to more than about five events. [Q23 &rarr; C]<br>
+        And do you think we should interview everybody, or just tourists?<br>
+        Hmm, presumably there'd be local people, domestic tourists and international tourists at some events. In fact, the more I think about it, the more I think we should just <span class="highlight">go for the tourist &ndash; but from overseas as well as national</span>. I'm sure we'd be able to provide more interesting results if we did that. [Q24 &rarr; C]<br>
+        Right. There's one thing that worries me though.<br>
+        What's that?<br>
+        We said it's important to get some background on the people who answer our questions, like what's their job, what they thought about the event. But <span class="highlight">the idea of asking people how old they are</span>...<br>
+        We can just ask them to tick a box with an age in it, and tell them they don't have to do it if they don't want to. [Q25 &rarr; B]<br>
+        We're going to have a lot of facts and figures to present. Have you any preference for putting them into a pie chart, a table, or a graph?<br>
+        Tables are easy to do. But I read that most people find <span class="highlight">pie charts visually stimulating</span>. I hate reading graphs.<br>
+        Pie chart sounds good. [Q26 &rarr; B]<br><br>
 
-        Natalie, have you finished your outline for the report we've been assigned? You know, the one about the biology field trip to Hawthorne Oceanic Research Facility?<br>
-        Hi Greg, I'm still thinking about what topic to focus on. I thought maybe the subject of symbiosis.<br>
-        Oh yes, I remember that the chapter about it in our textbook was really fascinating, particularly the symbiotic relationships involving cleaner fish, like the wrasse fish we studied. And there were moray eels at the Hawthorne facilities, as well as wrasse fish. I can describe in detail the cleaning process between those two species.<br>
-        What did that involve again?<br>
-        Well, the moray eels and wrasse fish were in the same tank, living on a reef. <span class="highlight">The wrasse fish gathered inside the reef and hung around until other fish showed up.</span> [Q26 &rarr; inside]<br>
-        Ah, I remember. The eels went there to be cleaned. Yes, Mr Horace explained that.<br>
-        He did. He said they usually gathered together near the cleaning station. Yeah, and then <span class="highlight">the wrasse fish would approach the moray eels there while they were resting</span>, and that's when they would start the cleaning process. [Q27 &rarr; resting]<br>
-        Right, I remember. First, they'd clean up <span class="highlight">the eels' gills by eating parasites and bacteria</span>. [Q28 &rarr; bacteria]<br>
-        Yes, they actually eat that stuff right off the eels, and <span class="highlight">they pick away the dead scales as well</span>. [Q29 &rarr; scales]<br>
-        Actually, you might also want to mention that the eels really rely on the fish because the parasites they eat are quite dangerous.<br>
-        Uh-huh. Also, at the end, <span class="highlight">the moray eels would often open their mouths and let the wrasse fish swim inside to clean as well</span>. [Q30 &rarr; mouths]<br>
-        I thought it was really fascinating to see that part of the process. Now, all I have to do is come up with some other examples of symbiotic relationships.<br>
-        Check out the list of references on Mr Horace's course outline. I'm sure you can find something suitable on it.
+        Okay, would this be a good time to discuss our introduction &ndash; an overview of tourism around the world? There are so many attractions to choose from, so let's narrow it down.<br>
+        Absolutely. I found out that <span class="highlight">Mexico</span> celebrates the fact that it produces a huge number of varieties of chilies, and people flock to this special event to taste dishes using them. [Q27 Mexico &rarr; C]<br>
+        That's true. But let's take a different tack. What about <span class="highlight">Greece</span>, one of the world's most famous countries for tourists? I think we should go for the ruins in this case, the temples and theatres and so on, rather than the food. [Q28 Greece &rarr; A]<br>
+        And for <span class="highlight">Britain</span>, instead of focusing on the countryside and parks, I'd like to find out more about why people go to see plays and musicals. Is it because there's such a good choice? [Q29 Britain &rarr; F]<br>
+        And for <span class="highlight">India</span>, instead of concentrating on the temples or the game parks, we could mention all the different folk dances &ndash; every region has its own, and they don't just perform them at festivals, they're part of everyday life. [Q30 India &rarr; G]<br>
+        Okay, we've got more than enough. Let's draft the introduction.
     </div>
 
     <div data-part="4">
         <strong>SECTION 4</strong><br><br>
-        You will hear a lecture from a professor in a history class about the development of railways.<br><br>
-        Last time, I briefly introduced our next topic, which is the development of locomotives and their effect on history. We looked at the invention of the first locomotive by Richard Trevithick in 1804 in Wales, and I explained the basic concepts and designs of the first locomotives. Today, I'd like to move ahead and discuss the development of trains and railway systems thereafter.<br>
-        <span class="highlight">Trevithick's locomotive was not a financial success</span>, unfortunately, but there was modest development of small rail systems in Great Britain after that. [Q31 &rarr; financial]<br>
-        However, it wasn't until the early 1830s that large-scale railway construction began, and this was mainly due to industrialisation sweeping across Great Britain, which increased demand for faster and cheaper transport. <span class="highlight">Centres of industry which contained new factories needed connections to port cities</span>, where manufactured products could be shipped abroad. [Q32 &rarr; connections] Likewise, raw materials needed to be sent to manufacturing plants.<br><br>
-
-        And it wasn't just in the UK that railways were being built, but all around the world, and this <span class="highlight">caused international trade to grow at a rapid rate</span>. [Q33 &rarr; international] The mid-1800s saw an explosion of railway construction on large landmasses. Continental Europe was also seeing an explosion of train rails because of the demand of industrialisation.<br>
-        Rail transport spread around the globe quickly, notably in North America. In the US, some rail projects began in the early 1800s, but it was not until the Baltimore and Ohio Railroad in 1828 that a railroad fully connected cities in an entire region. It was also the first railway to be totally open to the public rather than for a limited clientele.<br>
-        Canada also joined in and began building railways extensively in the 1850s. <span class="highlight">The discovery of gold in the western part of North America offered an additional incentive</span>, and by the end of the century the US and Canada each had built transcontinental railways connecting the east and west coasts. [Q34 &rarr; gold]<br><br>
-
-        In the 20th century, there were several historic occasions that affected railway construction. Most early trains ran by coal-powered steam engines. But in 1912 the first diesel-fuelled engine was introduced, which allowed for larger weights to be transported at faster speeds than ever. Long-distance land trips, which had previously taken weeks or even months, could now be <span class="highlight">accomplished in just a matter of days</span>. [Q35 &rarr; days]<br>
-        Railway construction continued at a fast rate, as demand was growing for both commercial transport and passenger transit. The occurrence of World War I and World War II slowed down the growth of railway systems a bit, as <span class="highlight">often they were military targets and required reconstruction after being destroyed or damaged during battles</span>. [Q36 &rarr; targets] But another period of rapid growth occurred in the 1950s, as Europe and other parts of the world rebuilt following the aftermath of World War II.<br><br>
-
-        Following that, trains were the most popular method of land transportation, until usage of automobiles and aircrafts became more widespread and popular. So, why did train transport experience such rapid growth and success within such a relatively short period of time? Before locomotives, land transport was primarily limited to wagons pulled by animals. Travel times were incredibly long, making trade rather expensive and difficult. So, world trade, even trade within the United Kingdom, was limited.<br>
-        Industrialization drove the development of railways, as the period demanded larger quantities of materials and a better way to transport products. <span class="highlight">Manufacturers insisted on having a way to transport their goods more rapidly and cheaply</span> to consumers or centers of commerce. [Q37 &rarr; manufacturers] And because of that, consumers started seeing a drop in the cost of manufactured products.<br>
-        Another reason rail systems grew so quickly, for Europeans and the British in particular, is that <span class="highlight">they allowed countries to have greater control of their colonies around the world</span>. [Q38 &rarr; colonies] Soldiers and military equipment could easily and quickly be moved to wherever they were needed. Needed supplies were easily transported across great distances to more remote areas. Were it not for rail systems, control of foreign territories would have been impossible.<br><br>
-
-        And these days, the popularity of passenger trains continues to grow, and they have become even more innovative and cost-efficient. <span class="highlight">Cleaner fuels are being used</span>, and with the development of electric trains, railway systems are more environmentally friendly. [Q39 &rarr; cleaner] These days, we have very sleek and modern trains in many countries that travel at speeds of up to 430 km per hour. And now we are seeing the further construction of electromagnetic train systems, which run on perfectly clean energy.<br>
-        <span class="highlight">Rapid development of advanced railway systems in East Asia and continental Europe</span> have made trains the most popular method of travel in those regions. [Q40 &rarr; advanced] Many believe that trains will become the most popular form of transport in the future, as they are fast, efficient and affordable.
+        I'm a past student of this university, and I'm joining some others on this career day to tell you about my job. I'm a patent attorney. If someone has a new idea or invention, they can ask for a patent. It gives the owner the right to stop other people from using that invention. A patent is granted by the government. Two inventors, or more usually these days a <span class="highlight">company</span>, apply for it, for a certain time period &ndash; usually a maximum of 20 years. [Q31 &rarr; company]<br>
+        The likelihood of getting a patent is dependent on whether the invention is <span class="highlight">original</span> or not. This is the crucial factor. It will be looked at by a patent examiner, and my job is to convince the examiner that the invention is not just an adjustment to something which already exists. [Q32 &rarr; original] In order to get the patent, we need to produce a full <span class="highlight">description</span> of the invention. It's really important to get the details right. [Q33 &rarr; description]<br>
+        Most of you are scientists, and the basic requirement of the job is a solid academic background. Often people have studied chemistry, or alternatively <span class="highlight">engineering</span>. [Q34 &rarr; engineering] On top of that, employers are looking for particular kinds of people. They want employees who have excellent <span class="highlight">communication</span> skills, so you can talk to inventors in terms that they can understand, and also ask the right questions. [Q35 &rarr; communication] This is an international business, and it's very convenient to be able to read documents without having to call for translations. So if you can understand a foreign <span class="highlight">language</span>, that's a great asset. [Q36 &rarr; language]<br>
+        There are lots of advantages to the job. It's extremely interesting &ndash; I use a range of expertise. I'm not just a scientist, not just a lawyer, but a mixture of the two. Although it takes quite a long time to qualify, after that you can earn a high <span class="highlight">salary</span>, which compares very well with other similar professions. [Q37 &rarr; salary]<br>
+        There are some disadvantages, of course. It can be rather <span class="highlight">lonely</span>, as you tend to sit in front of a computer for most of the day. [Q38 &rarr; lonely] And there isn't very much flexibility with location. Almost all vacancies for trainees are city based.<br>
+        So what kind of organization might you end up working in? Well, many people work in <span class="highlight">industrial</span> companies &ndash; the big ones have their own patent departments. [Q39 &rarr; industrial] There are also many private practices, and some of these will have areas of special interest. Finally, it's possible to get a job in various <span class="highlight">government</span> offices. In those departments, you'll probably be looking at applications for patents and making decisions about them. [Q40 &rarr; government]<br>
+        I really love my job, so I hope I've persuaded a few of you that it's worth thinking about.
     </div>
 </div>
 
 <!-- Hidden Answer Key -->
 <div id="answer-key" style="display:none;">
-    <p>1. 077876345 | 2. 27(th) February/Feb | 3. Akendale | 4. 3,450 | 5. books | 6. paintings | 7. mirror | 8. desk | 9. leg | 10. plates</p>
-    <p>11 &amp; 12. A, D | 13. A | 14. C | 15. B | 16. A | 17. A | 18. A | 19 &amp; 20. A, D</p>
-    <p>21. B | 22. A | 23. B | 24. A | 25. B | 26. inside | 27. resting | 28. bacteria | 29. scales | 30. mouths</p>
-    <p>31. financial | 32. connections | 33. international | 34. gold | 35. days | 36. targets | 37. manufacturers | 38. colonies | 39. cleaner | 40. advanced</p>
+    <p>1. Bittens | 2. group | 3. 23 | 4. 12.50 | 5. back | 6. wheelchair | 7. lift | 8. library | 9. vegetarian | 10. pizza</p>
+    <p>11. C | 12. A | 13. B | 14. A | 15. B | 16. A | 17. A | 18. C | 19. B | 20. C</p>
+    <p>21. A | 22. A | 23. C | 24. C | 25. B | 26. B | 27. C | 28. A | 29. F | 30. G</p>
+    <p>31. company | 32. original | 33. description | 34. engineering | 35. communication | 36. language | 37. salary | 38. lonely | 39. industrial | 40. government</p>
 </div>
 
+<audio id="global-audio-player" class="hidden"></audio>
+
+<!-- Navigation Arrows -->
 <div class="nav-arrows">
     <button class="nav-arrow" onclick="previousPart()" id="prevBtn">&lsaquo;</button>
     <button class="nav-arrow" onclick="nextPart()" id="nextBtn">&rsaquo;</button>
 </div>
 
+<!-- Bottom Navigation -->
 <nav class="nav-row perScorableItem" aria-label="Questions">
     <div class="footer__questionWrapper__1tZ46 selected multiple" role="tablist">
         <button role="tab" class="footer__questionNo__3WNct" onclick="switchToPart(1)">
@@ -986,12 +1159,14 @@ body::after {
     </button>
 </nav>
 
+<!-- Selection Toolbar -->
 <div id="selection-toolbar">
     <button onclick="applyHighlight()">Highlight</button>
     <button class="secondary" onclick="addComment()">Note</button>
     <button class="secondary" onclick="clearSelectionHighlight()">Clear</button>
 </div>
 
+<!-- Result Modal -->
 <div id="result-modal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
         <div class="modal-header">
@@ -1016,42 +1191,26 @@ const fontSizeToggle = document.getElementById('font-size-toggle');
 const fontSizeOptions = document.getElementById('font-size-options');
 const selToolbar = document.getElementById('selection-toolbar');
 
-/* ===== Answer key (single-answer questions) =====
-   For text answers the FIRST item is what is shown as the correct answer;
-   the remaining items are additional accepted spellings/formats. */
+/* ===== Answer key & question types ===== */
 const correctAnswers = {
-    q1: ['077876345', '0778766345'],
-    q2: ['27 February', '27th February', '27 Feb', '27th Feb', 'February 27', 'February 27th'],
-    q3: ['Akendale', 'Ackendale'],
-    q4: ['3,450', '3450', '$3,450', '$3450'],
-    q5: 'books', q6: 'paintings', q7: 'mirror', q8: ['desk', 'the desk'], q9: ['leg', 'legs'], q10: 'plates',
-    q13: 'A', q14: 'C', q15: 'B', q16: 'A', q17: 'A', q18: 'A',
-    q21: 'B', q22: 'A', q23: 'B', q24: 'A', q25: 'B',
-    q26: 'inside', q27: 'resting', q28: 'bacteria', q29: 'scales', q30: 'mouths',
-    q31: 'financial', q32: 'connections', q33: 'international', q34: 'gold', q35: 'days',
-    q36: 'targets', q37: 'manufacturers', q38: 'colonies', q39: 'cleaner', q40: 'advanced'
+    q1: 'Bittens', q2: 'group', q3: '23', q4: '12.50', q5: 'back',
+    q6: ['wheelchair', 'wheel chair'], q7: 'lift', q8: 'library', q9: 'vegetarian', q10: 'pizza',
+    q11: 'C', q12: 'A', q13: 'B', q14: 'A', q15: 'B',
+    q16: 'A', q17: 'A', q18: 'C', q19: 'B', q20: 'C',
+    q21: 'A', q22: 'A', q23: 'C', q24: 'C', q25: 'B', q26: 'B',
+    q27: 'C', q28: 'A', q29: 'F', q30: 'G',
+    q31: 'company', q32: 'original', q33: 'description', q34: 'engineering', q35: 'communication',
+    q36: 'language', q37: 'salary', q38: 'lonely', q39: 'industrial', q40: 'government'
 };
-
-/* ===== Two-letter (choose TWO) groups ===== */
-const multiGroups = [
-    { name: 'g1112', correct: ['A', 'D'], qs: [11, 12] },
-    { name: 'g1920', correct: ['A', 'D'], qs: [19, 20] }
-];
 
 const questionTypes = {
     q1:'text', q2:'text', q3:'text', q4:'text', q5:'text', q6:'text', q7:'text', q8:'text', q9:'text', q10:'text',
-    q13:'mcq', q14:'mcq', q15:'mcq', q16:'mcq', q17:'mcq', q18:'mcq',
-    q21:'mcq', q22:'mcq', q23:'mcq', q24:'mcq', q25:'mcq',
-    q26:'text', q27:'text', q28:'text', q29:'text', q30:'text',
+    q11:'select', q12:'select', q13:'select', q14:'select', q15:'select',
+    q16:'mcq', q17:'mcq', q18:'mcq', q19:'mcq', q20:'mcq',
+    q21:'mcq', q22:'mcq', q23:'mcq', q24:'mcq', q25:'mcq', q26:'mcq',
+    q27:'select', q28:'select', q29:'select', q30:'select',
     q31:'text', q32:'text', q33:'text', q34:'text', q35:'text', q36:'text', q37:'text', q38:'text', q39:'text', q40:'text'
 };
-
-/* ===== Limit checkbox groups to 2 selections ===== */
-function limitCheckboxGroup(name) {
-    const boxes = [...document.querySelectorAll(`input[name="${name}"]`)];
-    const checked = boxes.filter(b => b.checked);
-    if (checked.length > 2) checked[0].checked = false;
-}
 
 /* ===== Build footer sub-question buttons ===== */
 function buildSubQuestions() {
@@ -1098,15 +1257,6 @@ function switchToPart(partNumber) {
     updateNavigation();
 }
 
-function anchorFor(n) {
-    let el = document.getElementById(`q${n}`) || document.querySelector(`input[name="q${n}"]`);
-    if (!el) {
-        if (n === 11 || n === 12) el = document.getElementById('grp-1112');
-        else if (n === 19 || n === 20) el = document.getElementById('grp-1920');
-    }
-    return el;
-}
-
 function goToQuestion(questionNumber) {
     currentQuestion = questionNumber;
     let partNumber = Math.floor((questionNumber - 1) / 10) + 1;
@@ -1116,12 +1266,12 @@ function goToQuestion(questionNumber) {
     const questionBtn = document.querySelector(`.subQuestion[data-q="${questionNumber}"]`);
     if (questionBtn) questionBtn.classList.add('active');
 
-    const el = anchorFor(questionNumber);
+    const el = document.getElementById(`q${questionNumber}`) || document.querySelector(`input[name="q${questionNumber}"]`);
     if (el) {
-        const container = el.closest('.mcq-item') || el.closest('li') || el.closest('.flow-box') || el.closest('.question') || el;
+        const container = el.closest('.mcq-item') || el.closest('li') || el.closest('.question');
         if (container) {
             container.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            const flashTarget = el.closest('.question') || el;
+            const flashTarget = el.closest('.question');
             if (flashTarget) {
                 flashTarget.classList.add('flash');
                 setTimeout(() => flashTarget.classList.remove('flash'), 1000);
@@ -1147,14 +1297,6 @@ function previousPart() { if (currentQuestion > 1) goToQuestion(currentQuestion 
 
 /* ===== Answered tracking ===== */
 function isQuestionAnswered(qNum) {
-    if (qNum === 11 || qNum === 12) {
-        const sel = document.querySelectorAll('input[name="g1112"]:checked').length;
-        return qNum === 11 ? sel >= 1 : sel >= 2;
-    }
-    if (qNum === 19 || qNum === 20) {
-        const sel = document.querySelectorAll('input[name="g1920"]:checked').length;
-        return qNum === 19 ? sel >= 1 : sel >= 2;
-    }
     const el = document.getElementById(`q${qNum}`);
     if (el) return el.value.trim() !== '';
     return !!document.querySelector(`input[name="q${qNum}"]:checked`);
@@ -1188,7 +1330,10 @@ function saveSelection() {
 
 function showSelectionToolbar() {
     const sel = window.getSelection();
-    if (!sel || sel.rangeCount === 0 || sel.isCollapsed || sel.toString().trim() === '') { hideSelectionToolbar(); return; }
+    if (!sel || sel.rangeCount === 0 || sel.isCollapsed || sel.toString().trim() === '') {
+        hideSelectionToolbar();
+        return;
+    }
     const range = sel.getRangeAt(0);
     const rect = range.getBoundingClientRect();
     if (rect.width === 0 && rect.height === 0) { hideSelectionToolbar(); return; }
@@ -1205,12 +1350,15 @@ function showSelectionToolbar() {
 
 function hideSelectionToolbar() { selToolbar.style.display = 'none'; }
 
+/* Merge adjacent .highlight spans so partial-word highlights leave no gap */
 function mergeAdjacentHighlights(root) {
     root.querySelectorAll('span.highlight').forEach(span => {
         let next = span.nextSibling;
         while (next && next.nodeType === 1 && next.classList && next.classList.contains('highlight')) {
             while (next.firstChild) span.appendChild(next.firstChild);
-            const toRemove = next; next = next.nextSibling; toRemove.remove();
+            const toRemove = next;
+            next = next.nextSibling;
+            toRemove.remove();
         }
         span.normalize();
     });
@@ -1221,17 +1369,24 @@ function applyHighlight() {
     if (!range || range.collapsed) { hideSelectionToolbar(); return; }
     try {
         if (range.startContainer === range.endContainer && range.startContainer.nodeType === Node.TEXT_NODE) {
-            const span = document.createElement('span'); span.className = 'highlight';
+            const span = document.createElement('span');
+            span.className = 'highlight';
             range.surroundContents(span);
         } else {
             const frag = range.extractContents();
-            const span = document.createElement('span'); span.className = 'highlight';
-            span.appendChild(frag); range.insertNode(span);
+            const span = document.createElement('span');
+            span.className = 'highlight';
+            span.appendChild(frag);
+            range.insertNode(span);
         }
-    } catch (err) { console.warn('Highlight failed:', err); }
+    } catch (err) {
+        console.warn('Highlight failed:', err);
+    }
     mergeAdjacentHighlights(document.body);
-    const sel = window.getSelection(); if (sel) sel.removeAllRanges();
-    currentSelectionRange = null; hideSelectionToolbar();
+    const sel = window.getSelection();
+    if (sel) sel.removeAllRanges();
+    currentSelectionRange = null;
+    hideSelectionToolbar();
 }
 
 function addComment() {
@@ -1240,13 +1395,22 @@ function addComment() {
     const commentText = prompt('Enter your note:');
     if (!commentText) { hideSelectionToolbar(); return; }
     try {
-        const span = document.createElement('span'); span.className = 'comment-highlight';
-        const tooltip = document.createElement('span'); tooltip.className = 'comment-tooltip'; tooltip.textContent = commentText;
+        const span = document.createElement('span');
+        span.className = 'comment-highlight';
+        const tooltip = document.createElement('span');
+        tooltip.className = 'comment-tooltip';
+        tooltip.textContent = commentText;
         const frag = range.extractContents();
-        span.appendChild(frag); span.appendChild(tooltip); range.insertNode(span);
-    } catch (err) { console.warn('Comment failed:', err); }
-    const sel = window.getSelection(); if (sel) sel.removeAllRanges();
-    currentSelectionRange = null; hideSelectionToolbar();
+        span.appendChild(frag);
+        span.appendChild(tooltip);
+        range.insertNode(span);
+    } catch (err) {
+        console.warn('Comment failed:', err);
+    }
+    const sel = window.getSelection();
+    if (sel) sel.removeAllRanges();
+    currentSelectionRange = null;
+    hideSelectionToolbar();
 }
 
 function clearSelectionHighlight() {
@@ -1258,38 +1422,43 @@ function clearSelectionHighlight() {
         if (intersects) {
             const parent = el.parentNode;
             while (el.firstChild) {
-                if (el.firstChild.nodeType === 1 && el.firstChild.classList.contains('comment-tooltip')) el.removeChild(el.firstChild);
-                else parent.insertBefore(el.firstChild, el);
+                if (el.firstChild.nodeType === 1 && el.firstChild.classList.contains('comment-tooltip')) {
+                    el.removeChild(el.firstChild);
+                } else {
+                    parent.insertBefore(el.firstChild, el);
+                }
             }
-            parent.removeChild(el); parent.normalize();
+            parent.removeChild(el);
+            parent.normalize();
         }
     });
-    const sel = window.getSelection(); if (sel) sel.removeAllRanges();
-    currentSelectionRange = null; hideSelectionToolbar();
+    const sel = window.getSelection();
+    if (sel) sel.removeAllRanges();
+    currentSelectionRange = null;
+    hideSelectionToolbar();
 }
 
 function clearAllHighlights() {
     document.querySelectorAll('.highlight, .comment-highlight').forEach(el => {
         const parent = el.parentNode;
         while (el.firstChild) {
-            if (el.firstChild.nodeType === 1 && el.firstChild.classList.contains('comment-tooltip')) el.removeChild(el.firstChild);
-            else parent.insertBefore(el.firstChild, el);
+            if (el.firstChild.nodeType === 1 && el.firstChild.classList.contains('comment-tooltip')) {
+                el.removeChild(el.firstChild);
+            } else {
+                parent.insertBefore(el.firstChild, el);
+            }
         }
-        parent.removeChild(el); parent.normalize();
+        parent.removeChild(el);
+        parent.normalize();
     });
 }
 
 /* ===== Check answers ===== */
-function normalise(str) {
-    return String(str).trim().toLowerCase().replace(/[.,]/g, '').replace(/\s+/g, ' ');
-}
-
 function checkAnswers() {
     let score = 0;
     const resultsData = [];
 
-    document.querySelectorAll('.multi-choice-option.correct, .multi-choice-option.incorrect, .answer-input.correct, .answer-input.incorrect, .subQuestion.correct, .subQuestion.incorrect')
-        .forEach(el => el.classList.remove('correct', 'incorrect'));
+    document.querySelectorAll('.correct, .incorrect').forEach(el => el.classList.remove('correct', 'incorrect'));
     document.querySelectorAll('.correct-inline').forEach(el => el.remove());
 
     Object.keys(correctAnswers).forEach(key => {
@@ -1300,11 +1469,11 @@ function checkAnswers() {
         let userAnswer = '';
         let isCorrect = false;
 
-        if (type === 'text') {
+        if (type === 'text' || type === 'select') {
             const el = document.getElementById(key);
             userAnswer = el ? el.value.trim() : '';
             const accepted = Array.isArray(correctAnswer) ? correctAnswer : [String(correctAnswer)];
-            isCorrect = userAnswer !== '' && accepted.some(a => normalise(a) === normalise(userAnswer));
+            isCorrect = accepted.some(a => a.toLowerCase() === userAnswer.toLowerCase());
             if (el) {
                 el.classList.add(isCorrect ? 'correct' : 'incorrect');
                 if (!isCorrect) {
@@ -1326,34 +1495,17 @@ function checkAnswers() {
             });
         }
 
-        if (btn) { btn.classList.remove('answered'); btn.classList.add(isCorrect ? 'correct' : 'incorrect'); }
+        if (btn) {
+            btn.classList.remove('answered');
+            btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+        }
         if (isCorrect) score++;
 
         resultsData.push({
             question: qNum,
             userAnswer: userAnswer || 'No Answer',
-            correctAnswer: Array.isArray(correctAnswer) ? correctAnswer[0] : String(correctAnswer),
+            correctAnswer: Array.isArray(correctAnswer) ? correctAnswer.join(' / ') : String(correctAnswer),
             isCorrect: isCorrect
-        });
-    });
-
-    multiGroups.forEach(g => {
-        const boxes = [...document.querySelectorAll(`input[name="${g.name}"]`)];
-        const selected = boxes.filter(b => b.checked).map(b => b.value);
-        boxes.forEach(b => {
-            const wrap = b.closest('.multi-choice-option');
-            if (!wrap) return;
-            if (g.correct.includes(b.value)) wrap.classList.add('correct');
-            else if (b.checked) wrap.classList.add('incorrect');
-        });
-        const correctSelected = selected.filter(v => g.correct.includes(v)).length;
-        const selStr = selected.length ? selected.sort().join(', ') : 'No Answer';
-        g.qs.forEach((qn, idx) => {
-            const isC = idx < correctSelected;
-            const btn = document.querySelector(`.subQuestion[data-q="${qn}"]`);
-            if (btn) { btn.classList.remove('answered'); btn.classList.add(isC ? 'correct' : 'incorrect'); }
-            if (isC) score++;
-            resultsData.push({ question: qn, userAnswer: selStr, correctAnswer: g.correct.join(', '), isCorrect: isC });
         });
     });
 
@@ -1377,7 +1529,7 @@ function checkAnswers() {
         return 0;
     })(score);
 
-    document.querySelectorAll('.answer-input, .multi-choice-option input[type="radio"], .multi-choice-option input[type="checkbox"]').forEach(i => i.disabled = true);
+    document.querySelectorAll('.answer-input, input[type="radio"], .matching-select').forEach(i => i.disabled = true);
 
     document.querySelector('.main-container').classList.add('results-mode');
     switchToPart(currentPart);
@@ -1408,145 +1560,6 @@ function checkAnswers() {
     document.getElementById('result-modal').style.display = 'flex';
 }
 
-
-/* ===================================================================
-   AUDIO PLAYER
-   =================================================================== */
-(function () {
-    'use strict';
-
-    const audio = document.getElementById('global-audio-player');
-    const playBtn = document.getElementById('play-pause-btn');
-    const progress = document.getElementById('progress-bar');
-    const currentLabel = document.getElementById('current-time');
-    const totalLabel = document.getElementById('total-duration');
-    const volumeSlider = document.getElementById('new-volume-slider');
-    const volumeBtn = document.getElementById('volume-btn');
-    const speedBtn = document.getElementById('speed-btn');
-    const speedOptions = document.getElementById('speed-options');
-
-    let isDragging = false;
-
-    function formatTime(seconds) {
-        if (isNaN(seconds)) return '0:00';
-        const m = Math.floor(seconds / 60);
-        const s = Math.floor(seconds % 60);
-        return m + ':' + (s < 10 ? '0' : '') + s;
-    }
-
-    function togglePlay() {
-        if (audio.paused) { audio.play().catch(() => {}); }
-        else { audio.pause(); }
-    }
-
-    function updatePlayIcon() {
-        playBtn.innerHTML = audio.paused
-            ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'
-            : '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
-    }
-
-    function updateVolumeIcon(val) {
-        const v = val !== undefined ? val : audio.volume;
-        const icon = volumeBtn.querySelector('svg');
-        if (v === 0) {
-            icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line>';
-        } else if (v < 0.5) {
-            icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>';
-        } else {
-            icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>';
-        }
-    }
-
-    function setVolume(val) {
-        const v = Math.min(1, Math.max(0, parseFloat(val)));
-        audio.volume = v;
-        volumeSlider.value = v;
-        updateVolumeIcon(v);
-    }
-
-    function toggleMute() {
-        if (audio.volume > 0) {
-            audio.dataset.prevVolume = audio.volume;
-            setVolume(0);
-        } else {
-            setVolume(parseFloat(audio.dataset.prevVolume) || 0.8);
-        }
-    }
-
-    function setSpeed(val) {
-        const speed = parseFloat(val);
-        if (isNaN(speed)) return;
-        audio.playbackRate = speed;
-        speedBtn.textContent = speed + 'x';
-        speedOptions.querySelectorAll('div').forEach(el => {
-            el.classList.toggle('active', parseFloat(el.dataset.speed) === speed);
-        });
-        speedOptions.classList.add('hidden');
-    }
-
-    playBtn.addEventListener('click', togglePlay);
-    audio.addEventListener('play', updatePlayIcon);
-    audio.addEventListener('pause', updatePlayIcon);
-    audio.addEventListener('ended', () => {
-        updatePlayIcon();
-        progress.value = 0;
-        currentLabel.textContent = formatTime(0);
-    });
-
-    audio.addEventListener('loadedmetadata', () => {
-        progress.max = audio.duration;
-        totalLabel.textContent = formatTime(audio.duration);
-        currentLabel.textContent = formatTime(audio.currentTime);
-    });
-    audio.addEventListener('timeupdate', () => {
-        if (isDragging) return;
-        progress.value = audio.currentTime;
-        currentLabel.textContent = formatTime(audio.currentTime);
-    });
-
-    progress.addEventListener('mousedown', () => { isDragging = true; });
-    progress.addEventListener('mouseup', () => { isDragging = false; });
-    progress.addEventListener('touchstart', () => { isDragging = true; });
-    progress.addEventListener('touchend', () => { isDragging = false; });
-    progress.addEventListener('input', () => {
-        audio.currentTime = progress.value;
-        currentLabel.textContent = formatTime(progress.value);
-    });
-
-    volumeSlider.addEventListener('input', (e) => {
-        const v = parseFloat(e.target.value);
-        audio.volume = v;
-        updateVolumeIcon(v);
-    });
-    volumeBtn.addEventListener('click', toggleMute);
-
-    speedBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        speedOptions.classList.toggle('hidden');
-    });
-    speedOptions.addEventListener('click', (e) => {
-        if (e.target.dataset.speed) setSpeed(e.target.dataset.speed);
-    });
-    document.addEventListener('click', () => speedOptions.classList.add('hidden'));
-
-    /* Spacebar play/pause when not typing in a field */
-    document.addEventListener('keydown', (e) => {
-        if (e.code !== 'Space') return;
-        const tag = e.target && e.target.tagName ? e.target.tagName.toLowerCase() : '';
-        if (tag === 'input' || tag === 'textarea' || tag === 'select' || tag === 'button') return;
-        e.preventDefault();
-        togglePlay();
-    });
-
-    setVolume(1);
-    updatePlayIcon();
-
-    audio.addEventListener('error', () => {
-        console.warn('Audio failed to load. Check the source URL.');
-        totalLabel.textContent = '-:--';
-    });
-})();
-
 /* ===== Init ===== */
 document.addEventListener('DOMContentLoaded', function () {
     buildSubQuestions();
@@ -1559,7 +1572,9 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('clear-all-btn').addEventListener('click', clearAllHighlights);
 
     fontSizeToggle.addEventListener('click', () => fontSizeOptions.classList.toggle('show'));
-    document.addEventListener('click', (e) => { if (!e.target.closest('.font-size-container')) fontSizeOptions.classList.remove('show'); });
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.font-size-container')) fontSizeOptions.classList.remove('show');
+    });
     document.querySelectorAll('.font-size-options div').forEach(option => {
         option.addEventListener('click', () => changeFontSize(option.getAttribute('data-size')));
     });
@@ -1569,25 +1584,18 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('result-modal').style.display = 'none';
     });
 
-    document.querySelectorAll('input[name="g1112"], input[name="g1920"]').forEach(cb => {
-        cb.addEventListener('change', () => { limitCheckboxGroup(cb.name); updateAnsweredIndicators(); });
-    });
-
-    document.querySelectorAll('.answer-input, .multi-choice-option input[type="radio"]').forEach(input => {
+    document.querySelectorAll('.answer-input, input[type="radio"], .matching-select').forEach(input => {
         input.addEventListener('input', updateAnsweredIndicators);
         input.addEventListener('change', updateAnsweredIndicators);
     });
 
-    document.addEventListener('mouseup', (e) => {
-        if (e.target.closest('.audio-player-container')) return;
-        setTimeout(showSelectionToolbar, 0);
-    });
-    document.addEventListener('touchend', (e) => {
-        if (e.target.closest('.audio-player-container')) return;
-        setTimeout(showSelectionToolbar, 0);
-    });
+    /* Selection toolbar triggers */
+    document.addEventListener('mouseup', () => setTimeout(showSelectionToolbar, 0));
+    document.addEventListener('touchend', () => setTimeout(showSelectionToolbar, 0));
     document.addEventListener('selectionchange', () => { saveSelection(); });
-    document.addEventListener('mousedown', (e) => { if (!e.target.closest('#selection-toolbar')) hideSelectionToolbar(); });
+    document.addEventListener('mousedown', (e) => {
+        if (!e.target.closest('#selection-toolbar')) hideSelectionToolbar();
+    });
     window.addEventListener('scroll', hideSelectionToolbar, true);
 
     updateAnsweredIndicators();
