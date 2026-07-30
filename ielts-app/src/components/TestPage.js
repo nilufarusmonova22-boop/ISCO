@@ -235,220 +235,188 @@ function ActiveTest({ test, color, icon, label, user, userProfile, savedResult, 
   // Inject saved answers + result overlay into HTML
   const injectHTML = (html) => {
     const savedAnswers = savedResult ? JSON.stringify(savedResult.answers || []) : '[]';
-    const savedScore = savedResult?.score || '';
+    const savedScore = savedResult ? (savedResult.score || '') : '';
 
-    const overlay = `
+    const script = `
 <style>
-#isco-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;align-items:center;justify-content:center;padding:16px;}
-#isco-overlay.show{display:flex;}
-#isco-box{background:#0f1120;border:2px solid ${color};border-radius:18px;width:min(580px,100%);max-height:88vh;overflow-y:auto;font-family:sans-serif;}
-#isco-header{padding:22px 24px;border-bottom:1px solid #1e2235;text-align:center;}
-#isco-header h2{color:${color};font-size:1.2rem;font-weight:800;margin-bottom:4px;}
-#isco-score{font-size:3.5rem;font-weight:800;color:#ffd700;line-height:1;margin:10px 0 4px;}
-#isco-sub{color:#5a6080;font-size:0.82rem;}
-#isco-body{padding:18px 20px;}
-#isco-filter{display:flex;gap:6px;margin-bottom:14px;}
-.isco-fbtn{flex:1;background:#161828;border:1px solid #1e2235;border-radius:8px;padding:7px;color:#5a6080;font-size:0.78rem;cursor:pointer;font-family:sans-serif;}
-.isco-fbtn.active{background:${color}22;border-color:${color};color:${color};}
-#isco-list{display:flex;flex-direction:column;gap:6px;}
-.isco-qrow{border-radius:10px;padding:10px 14px;display:flex;gap:12px;align-items:flex-start;}
-.isco-qrow.correct{background:#00e5a011;border:1px solid #00e5a033;}
-.isco-qrow.wrong{background:#ff5c7d11;border:1px solid #ff5c7d33;}
-.isco-qrow.unanswered{background:#1e223566;border:1px solid #1e2235;}
-.isco-qnum{font-weight:800;font-size:0.82rem;width:24px;flex-shrink:0;margin-top:1px;}
-.isco-qrow.correct .isco-qnum{color:#00e5a0;}
-.isco-qrow.wrong .isco-qnum{color:#ff5c7d;}
-.isco-qrow.unanswered .isco-qnum{color:#5a6080;}
-.isco-qdesc{flex:1;}
-.isco-your{font-size:0.82rem;margin-bottom:3px;}
-.isco-qrow.correct .isco-your{color:#00e5a0;}
-.isco-qrow.wrong .isco-your{color:#ff5c7d;}
-.isco-correct-ans{font-size:0.78rem;color:#5a6080;}
-.isco-correct-ans span{color:#00e5a0;}
-.isco-qbadge{font-size:0.75rem;margin-top:2px;}
-#isco-footer{padding:16px 20px;border-top:1px solid #1e2235;display:flex;gap:10px;}
-.isco-close{flex:1;background:${color};border:none;border-radius:10px;padding:11px;font-weight:700;font-size:0.9rem;cursor:pointer;color:#000;}
-.isco-review{flex:1;background:#161828;border:1px solid #1e2235;border-radius:10px;padding:11px;font-weight:700;font-size:0.9rem;cursor:pointer;color:#e8eaf5;}
+#isco-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:99999;align-items:center;justify-content:center;padding:16px;}
+#isco-modal.open{display:flex;}
+#isco-box{background:#0f1120;border:2px solid ${color};border-radius:18px;width:min(600px,100%);max-height:90vh;display:flex;flex-direction:column;font-family:sans-serif;overflow:hidden;}
+#isco-head{padding:20px 22px;border-bottom:1px solid #1e2235;text-align:center;flex-shrink:0;}
+#isco-head h3{color:${color};font-size:1.1rem;font-weight:800;margin-bottom:6px;}
+#isco-big-score{font-size:3rem;font-weight:800;color:#ffd700;line-height:1;margin:8px 0 4px;}
+#isco-stats{display:flex;justify-content:center;gap:16px;font-size:0.78rem;margin-top:6px;}
+#isco-filters{display:flex;gap:6px;padding:12px 18px;border-bottom:1px solid #1e2235;flex-shrink:0;}
+.isco-fb{flex:1;background:#161828;border:1px solid #1e2235;border-radius:8px;padding:7px 4px;color:#5a6080;font-size:0.75rem;cursor:pointer;font-weight:700;}
+.isco-fb.on{background:${color}22;border-color:${color};color:${color};}
+#isco-answers{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:5px;}
+.isco-row{border-radius:9px;padding:9px 13px;display:flex;gap:10px;align-items:flex-start;}
+.isco-row.ok{background:#00e5a011;border:1px solid #00e5a033;}
+.isco-row.no{background:#ff5c7d11;border:1px solid #ff5c7d33;}
+.isco-rnum{font-weight:800;font-size:0.82rem;width:26px;flex-shrink:0;padding-top:1px;}
+.isco-row.ok .isco-rnum{color:#00e5a0;}
+.isco-row.no .isco-rnum{color:#ff5c7d;}
+.isco-rinfo{flex:1;}
+.isco-ryour{font-size:0.83rem;margin-bottom:2px;}
+.isco-row.ok .isco-ryour{color:#00e5a0;}
+.isco-row.no .isco-ryour{color:#ff5c7d;}
+.isco-rcorrect{font-size:0.76rem;color:#5a6080;}
+.isco-rcorrect span{color:#00e5a0;font-weight:600;}
+#isco-foot{padding:12px 16px;border-top:1px solid #1e2235;flex-shrink:0;}
+#isco-foot button{width:100%;background:${color};border:none;border-radius:10px;padding:11px;font-weight:800;font-size:0.92rem;cursor:pointer;color:#000;}
+#isco-prev-btn{position:fixed;bottom:18px;right:18px;z-index:9999;background:#ffd700;border:none;border-radius:12px;padding:10px 18px;font-weight:800;cursor:pointer;font-family:sans-serif;font-size:0.88rem;color:#000;box-shadow:0 4px 20px rgba(0,0,0,.5);display:none;}
 </style>
-<div id="isco-overlay">
+
+<div id="isco-modal">
   <div id="isco-box">
-    <div id="isco-header">
-      <h2>${icon} ${label} — Natijalar</h2>
-      <div id="isco-score">-</div>
-      <div id="isco-sub">Natijangiz saqlandi ✓</div>
-      <div id="isco-stats" style="display:flex;justify-content:center;gap:16px;margin-top:10px;font-size:0.78rem;"></div>
-    </div>
-    <div id="isco-body">
-      <div id="isco-filter">
-        <button class="isco-fbtn active" onclick="filterQ('all')">Hammasi</button>
-        <button class="isco-fbtn" onclick="filterQ('wrong')" style="border-color:#ff5c7d44;color:#ff5c7d;">❌ Noto'g'ri</button>
-        <button class="isco-fbtn" onclick="filterQ('correct')" style="border-color:#00e5a044;color:#00e5a0;">✅ To'g'ri</button>
+    <div id="isco-head">
+      <h3>${icon} ${label} — Natijalar</h3>
+      <div id="isco-big-score">—</div>
+      <div id="isco-stats">
+        <span id="isco-s-ok" style="color:#00e5a0"></span>
+        <span id="isco-s-no" style="color:#ff5c7d"></span>
+        <span id="isco-s-tot" style="color:#5a6080"></span>
       </div>
-      <div id="isco-list"></div>
     </div>
-    <div id="isco-footer">
-      <button class="isco-review" onclick="document.getElementById('isco-overlay').classList.remove('show')">📋 Testni ko'rish</button>
-      <button class="isco-close" onclick="document.getElementById('isco-overlay').classList.add('show')">📊 Natijalar</button>
+    <div id="isco-filters">
+      <button class="isco-fb on" onclick="iscoFilter('all',this)">Hammasi</button>
+      <button class="isco-fb" onclick="iscoFilter('no',this)" style="border-color:#ff5c7d33;color:#ff5c7d;">❌ Noto'g'ri</button>
+      <button class="isco-fb" onclick="iscoFilter('ok',this)" style="border-color:#00e5a033;color:#00e5a0;">✅ To'g'ri</button>
     </div>
+    <div id="isco-answers"></div>
+    <div id="isco-foot"><button onclick="document.getElementById('isco-modal').classList.remove('open')">✕ Yopish</button></div>
   </div>
 </div>
+<button id="isco-prev-btn" onclick="iscoShowModal()">📊 Natijani ko'rish</button>
+
 <script>
 (function(){
-  var allDetails = [];
-  var currentFilter = 'all';
+  var iscoData = [];
+  var iscoFilter_ = 'all';
 
-  function filterQ(type){
-    currentFilter = type;
-    document.querySelectorAll('.isco-fbtn').forEach(function(b){ b.classList.remove('active'); });
-    event.target.classList.add('active');
-    renderList();
-  }
-  window.filterQ = filterQ;
+  window.iscoFilter = function(type, btn){
+    iscoFilter_ = type;
+    document.querySelectorAll('.isco-fb').forEach(function(b){b.classList.remove('on');});
+    btn.classList.add('on');
+    iscoRender();
+  };
 
-  function renderList(){
-    var list = document.getElementById('isco-list');
+  function iscoRender(){
+    var list = document.getElementById('isco-answers');
     if(!list) return;
-    var filtered = allDetails.filter(function(d){
-      if(currentFilter==='wrong') return !d.correct;
-      if(currentFilter==='correct') return d.correct;
+    var d = iscoData.filter(function(r){
+      if(iscoFilter_==='ok') return r.isCorrect;
+      if(iscoFilter_==='no') return !r.isCorrect;
       return true;
     });
-    list.innerHTML = filtered.map(function(d){
-      var cls = d.correct ? 'correct' : (d.your ? 'wrong' : 'unanswered');
-      var badge = d.correct ? '✅' : (d.your ? '❌' : '—');
-      return '<div class="isco-qrow '+cls+'">' +
-        '<div class="isco-qnum">'+d.num+'</div>' +
-        '<div class="isco-qdesc">' +
-          '<div class="isco-your">'+badge+' '+( d.your || '<i style="color:#5a6080">Javob berilmagan</i>'  )+'</div>' +
-          (!d.correct && d.answer ? '<div class="isco-correct-ans">To'g'ri: <span>'+d.answer+'</span></div>' : '') +
-        '</div>' +
-      '</div>';
+    list.innerHTML = d.map(function(r){
+      return '<div class="isco-row '+(r.isCorrect?'ok':'no')+'">' +
+        '<div class="isco-rnum">'+(r.question||r.num)+'</div>' +
+        '<div class="isco-rinfo">' +
+          '<div class="isco-ryour">'+(r.isCorrect?'✅':'❌')+' '+(r.userAnswer||r.your||'—')+'</div>' +
+          (!r.isCorrect && (r.correctAnswer||r.answer) ? '<div class="isco-rcorrect">To\'g\'ri: <span>'+(r.correctAnswer||r.answer)+'</span></div>' : '') +
+        '</div></div>';
     }).join('');
   }
 
-  function collectAnswers(){
-    var results = [];
-    // Try to collect from result table/list
-    var rows = document.querySelectorAll('[class*="result"] tr, [id*="result"] tr, .result-row, [data-question]');
-    rows.forEach(function(row, i){
-      var cells = row.querySelectorAll('td, .cell, span');
-      if(cells.length >= 2){
-        var num = parseInt(cells[0]?.textContent) || (i+1);
-        var your = cells[1]?.textContent?.trim() || '';
-        var answer = cells[2]?.textContent?.trim() || '';
-        var correct = cells[3]?.textContent?.includes('correct') || cells[1]?.classList?.contains('correct') || your.toLowerCase()===answer.toLowerCase();
-        results.push({num:num, your:your, answer:answer, correct:correct});
-      }
-    });
-
-    // Fallback: collect all inputs
-    if(results.length === 0){
-      var inputs = document.querySelectorAll('input[type="text"], input[type="radio"]:checked, select');
-      inputs.forEach(function(inp, i){
-        var val = inp.value?.trim();
-        if(val) results.push({num:i+1, your:val, answer:'', correct:false});
-      });
-    }
-    return results;
+  function iscoShowStats(){
+    var ok = iscoData.filter(function(r){return r.isCorrect;}).length;
+    var no = iscoData.filter(function(r){return !r.isCorrect;}).length;
+    document.getElementById('isco-s-ok').textContent = '✅ '+ok+" to'g'ri";
+    document.getElementById('isco-s-no').textContent = '❌ '+no+" noto'g'ri";
+    document.getElementById('isco-s-tot').textContent = '📝 '+iscoData.length+' savol';
   }
 
-  // Parse from #result-details table (this HTML uses resultsData array)
-  function parseFromResultsTable(){
+  window.iscoShowModal = function(){
+    // Read fresh from result table if available
     var rows = document.querySelectorAll('#result-details tbody tr');
-    var arr = [];
-    rows.forEach(function(row){
-      var cells = row.querySelectorAll('td');
-      if(cells.length >= 4){
-        var num = parseInt(cells[0].textContent.trim()) || arr.length+1;
-        var your = cells[1].textContent.trim();
-        var answer = cells[2].textContent.trim();
-        var isCorrect = cells[3].classList.contains('result-correct') || cells[3].textContent.includes('✓') || cells[3].textContent.toLowerCase().includes('correct');
-        arr.push({num:num, your:your, answer:answer, correct:isCorrect});
-      }
-    });
-    return arr;
-  }
+    if(rows.length > 0){
+      var fresh = [];
+      rows.forEach(function(row){
+        var cells = row.querySelectorAll('td');
+        if(cells.length >= 4){
+          fresh.push({
+            question: cells[0].textContent.trim(),
+            userAnswer: cells[1].textContent.trim(),
+            correctAnswer: cells[2].textContent.trim(),
+            isCorrect: cells[3].classList.contains('result-correct')
+          });
+        }
+      });
+      if(fresh.length > 0) iscoData = fresh;
+    }
 
-  function showOverlay(scoreText){
-    // Get data directly from the result table
-    var parsed = parseFromResultsTable();
-    if(parsed.length > 0) allDetails = parsed;
+    var scoreEl = document.getElementById('score-summary');
+    var scoreText = scoreEl ? scoreEl.textContent.trim() : '';
+    document.getElementById('isco-big-score').textContent = scoreText || '—';
+    iscoShowStats();
+    iscoRender();
+    document.getElementById('isco-modal').classList.add('open');
 
-    var correct = allDetails.filter(function(d){return d.correct;}).length;
-    var wrong = allDetails.filter(function(d){return !d.correct && d.your;}).length;
-    var total = allDetails.length || 40;
-
-    document.getElementById('isco-score').textContent = scoreText;
-    document.getElementById('isco-stats').innerHTML =
-      '<span style="color:#00e5a0">✅ '+correct+' to\'g\'ri</span>' +
-      '<span style="color:#ff5c7d">❌ '+wrong+' noto\'g\'ri</span>' +
-      '<span style="color:#5a6080">📝 '+total+' savol</span>';
-
-    renderList();
-    document.getElementById('isco-overlay').classList.add('show');
-
-    // Send to parent (React) for saving to Firebase
+    // Send to parent React for Firebase save
     try {
       window.parent.postMessage({
-        type:'ISCO_TEST_RESULT',
+        type: 'ISCO_TEST_RESULT',
         score: scoreText,
-        answers: allDetails
+        answers: iscoData
       }, '*');
     } catch(e){}
-  }
+  };
 
-  // Restore saved answers — show "Ko\'rish" button if previous result exists
-  var savedAnswers = ${savedAnswers};
-  var savedScore = "${savedScore}";
-  if(savedAnswers && savedAnswers.length > 0){
-    allDetails = savedAnswers;
-    window.addEventListener('DOMContentLoaded', function(){
-      setTimeout(function(){
-        var btn = document.createElement('button');
-        btn.innerHTML = '📊 Oldingi natija: <b>'+savedScore+'</b>';
-        btn.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:8888;background:#ffd700;border:none;border-radius:12px;padding:11px 20px;font-weight:700;cursor:pointer;font-family:sans-serif;font-size:14px;box-shadow:0 4px 20px rgba(0,0,0,.5);color:#000;';
-        btn.onclick = function(){
-          document.getElementById('isco-score').textContent = savedScore;
-          var correct = allDetails.filter(function(d){return d.correct;}).length;
-          var wrong = allDetails.filter(function(d){return !d.correct && d.your;}).length;
-          document.getElementById('isco-stats').innerHTML =
-            '<span style="color:#00e5a0">✅ '+correct+' to\'g\'ri</span>' +
-            '<span style="color:#ff5c7d">❌ '+wrong+' noto\'g\'ri</span>' +
-            '<span style="color:#5a6080">📝 '+allDetails.length+' savol</span>';
-          renderList();
-          document.getElementById('isco-overlay').classList.add('show');
-        };
-        document.body.appendChild(btn);
-      }, 800);
+  // Hook deliver button
+  function hookDeliver(){
+    var btn = document.getElementById('deliver-button');
+    if(btn && !btn._iscohook){
+      btn._iscohook = true;
+      btn.addEventListener('click', function(){
+        setTimeout(function(){
+          iscoShowModal();
+        }, 900);
+      });
+    }
+  }
+  hookDeliver();
+  setTimeout(hookDeliver, 1000);
+  setTimeout(hookDeliver, 3000);
+
+  // Restore saved answers from previous session
+  var prev = ${savedAnswers};
+  var prevScore = "${savedScore}";
+  if(prev && prev.length > 0){
+    iscoData = prev.map(function(r){
+      return {
+        question: r.question || r.num,
+        userAnswer: r.userAnswer || r.your || '—',
+        correctAnswer: r.correctAnswer || r.answer || '',
+        isCorrect: r.isCorrect !== undefined ? r.isCorrect : r.correct
+      };
     });
+    document.getElementById('isco-big-score').textContent = prevScore;
+    iscoShowStats();
+    iscoRender();
+    // Show "Natijani ko'rish" button
+    var pb = document.getElementById('isco-prev-btn');
+    if(pb){
+      pb.textContent = '📊 Oldingi natija: ' + prevScore;
+      pb.style.display = 'block';
+    }
   }
 
-  document.addEventListener('DOMContentLoaded', function(){
-    var tryHook = function(){
-      var btn = document.getElementById('deliver-button') ||
-        document.querySelector('[id*="deliver"]') ||
-        document.querySelector('[id*="submit"]') ||
-        document.querySelector('button[onclick*="deliver"]') ||
-        document.querySelector('input[type="submit"]');
-      if(btn && !btn._iscoHooked){
-        btn._iscoHooked = true;
-        btn.addEventListener('click', function(){
-          setTimeout(function(){
-            var scoreEl = document.getElementById('score-summary');
-            var scoreText = scoreEl ? scoreEl.textContent.trim() : '?/40';
-            showOverlay(scoreText);
-          }, 800);
-        });
-      }
-    };
-    tryHook();
-    setTimeout(tryHook, 1000);
-    setTimeout(tryHook, 2500);
-    setTimeout(tryHook, 5000);
+  // Also hook "My Results" button after deliver clones it
+  var obs = new MutationObserver(function(){
+    var myBtn = document.querySelector('.footer__deliverButton__3FM07.success');
+    if(myBtn && !myBtn._iscohook2){
+      myBtn._iscohook2 = true;
+      myBtn.addEventListener('click', function(e){
+        e.stopPropagation();
+        iscoShowModal();
+      });
+    }
   });
+  obs.observe(document.body, {childList:true, subtree:true});
 })();
 </script>`;
-    return html.replace('</body>', overlay + '</body>');
+    return html.replace('</body>', script + '</body>');
   };
 
   return (
