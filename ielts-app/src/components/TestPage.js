@@ -239,67 +239,168 @@ function ActiveTest({ test, color, icon, label, user, userProfile, savedResult, 
 
     const script = `
 <style>
-#isco-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:99999;align-items:center;justify-content:center;padding:16px;}
+#isco-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:99999;align-items:center;justify-content:center;padding:16px;}
 #isco-modal.open{display:flex;}
-#isco-box{background:#0f1120;border:2px solid ${color};border-radius:18px;width:min(600px,100%);max-height:90vh;display:flex;flex-direction:column;font-family:sans-serif;overflow:hidden;}
-#isco-head{padding:20px 22px;border-bottom:1px solid #1e2235;text-align:center;flex-shrink:0;}
-#isco-head h3{color:${color};font-size:1.1rem;font-weight:800;margin-bottom:6px;}
-#isco-big-score{font-size:3rem;font-weight:800;color:#ffd700;line-height:1;margin:8px 0 4px;}
-#isco-stats{display:flex;justify-content:center;gap:16px;font-size:0.78rem;margin-top:6px;}
-#isco-filters{display:flex;gap:6px;padding:12px 18px;border-bottom:1px solid #1e2235;flex-shrink:0;}
-.isco-fb{flex:1;background:#161828;border:1px solid #1e2235;border-radius:8px;padding:7px 4px;color:#5a6080;font-size:0.75rem;cursor:pointer;font-weight:700;}
+#isco-box{background:#0f1120;border:2px solid ${color};border-radius:18px;width:min(600px,100%);max-height:90vh;display:flex;flex-direction:column;overflow:hidden;}
+#isco-head{padding:18px 22px;border-bottom:1px solid #1e2235;text-align:center;flex-shrink:0;}
+#isco-title{color:${color};font-size:1rem;font-weight:800;margin-bottom:6px;font-family:sans-serif;}
+#isco-score-big{font-size:2.8rem;font-weight:800;color:#ffd700;line-height:1;margin:6px 0;}
+#isco-stats{display:flex;justify-content:center;gap:16px;font-size:0.78rem;margin-top:8px;font-family:sans-serif;}
+#isco-filters{display:flex;gap:6px;padding:10px 16px;border-bottom:1px solid #1e2235;flex-shrink:0;}
+.isco-fb{flex:1;background:#161828;border:1px solid #1e2235;border-radius:8px;padding:7px;font-size:0.75rem;cursor:pointer;font-weight:700;font-family:sans-serif;color:#5a6080;}
 .isco-fb.on{background:${color}22;border-color:${color};color:${color};}
-#isco-answers{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:5px;}
-.isco-row{border-radius:9px;padding:9px 13px;display:flex;gap:10px;align-items:flex-start;}
-.isco-row.ok{background:#00e5a011;border:1px solid #00e5a033;}
-.isco-row.no{background:#ff5c7d11;border:1px solid #ff5c7d33;}
-.isco-rnum{font-weight:800;font-size:0.82rem;width:26px;flex-shrink:0;padding-top:1px;}
-.isco-row.ok .isco-rnum{color:#00e5a0;}
-.isco-row.no .isco-rnum{color:#ff5c7d;}
-.isco-rinfo{flex:1;}
-.isco-ryour{font-size:0.83rem;margin-bottom:2px;}
-.isco-row.ok .isco-ryour{color:#00e5a0;}
-.isco-row.no .isco-ryour{color:#ff5c7d;}
-.isco-rcorrect{font-size:0.76rem;color:#5a6080;}
-.isco-rcorrect span{color:#00e5a0;font-weight:600;}
+#isco-list{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:5px;}
+.ir{border-radius:9px;padding:9px 12px;display:flex;gap:10px;align-items:flex-start;}
+.ir.ok{background:#00e5a011;border:1px solid #00e5a033;}
+.ir.no{background:#ff5c7d11;border:1px solid #ff5c7d33;}
+.ir-n{font-weight:800;font-size:0.82rem;width:26px;flex-shrink:0;padding-top:1px;font-family:sans-serif;}
+.ir.ok .ir-n{color:#00e5a0;}.ir.no .ir-n{color:#ff5c7d;}
+.ir-d{flex:1;font-family:sans-serif;}
+.ir-y{font-size:0.83rem;margin-bottom:2px;}
+.ir.ok .ir-y{color:#00e5a0;}.ir.no .ir-y{color:#ff5c7d;}
+.ir-c{font-size:0.76rem;color:#5a6080;}
+.ir-c b{color:#00e5a0;}
 #isco-foot{padding:12px 16px;border-top:1px solid #1e2235;flex-shrink:0;}
-#isco-foot button{width:100%;background:${color};border:none;border-radius:10px;padding:11px;font-weight:800;font-size:0.92rem;cursor:pointer;color:#000;}
-#isco-prev-btn{position:fixed;bottom:18px;right:18px;z-index:9999;background:#ffd700;border:none;border-radius:12px;padding:10px 18px;font-weight:800;cursor:pointer;font-family:sans-serif;font-size:0.88rem;color:#000;box-shadow:0 4px 20px rgba(0,0,0,.5);display:none;}
+.isco-close-btn{width:100%;background:${color};border:none;border-radius:10px;padding:11px;font-weight:800;font-size:0.9rem;cursor:pointer;color:#000;font-family:sans-serif;}
+#isco-float{position:fixed;bottom:16px;right:16px;z-index:9998;background:#ffd700;border:none;border-radius:12px;padding:10px 18px;font-weight:800;cursor:pointer;font-family:sans-serif;font-size:0.85rem;color:#000;box-shadow:0 4px 20px rgba(0,0,0,.5);display:none;}
 </style>
 
 <div id="isco-modal">
   <div id="isco-box">
     <div id="isco-head">
-      <h3>${icon} ${label} — Natijalar</h3>
-      <div id="isco-big-score">—</div>
+      <div id="isco-title">${icon} ${label} — Natijalar</div>
+      <div id="isco-score-big">—</div>
       <div id="isco-stats">
-        <span id="isco-s-ok" style="color:#00e5a0"></span>
-        <span id="isco-s-no" style="color:#ff5c7d"></span>
-        <span id="isco-s-tot" style="color:#5a6080"></span>
+        <span id="ist-ok" style="color:#00e5a0">—</span>
+        <span id="ist-no" style="color:#ff5c7d">—</span>
+        <span id="ist-tot" style="color:#5a6080">—</span>
       </div>
     </div>
     <div id="isco-filters">
-      <button class="isco-fb on" onclick="iscoFilter('all',this)">Hammasi</button>
-      <button class="isco-fb" onclick="iscoFilter('no',this)" style="border-color:#ff5c7d33;color:#ff5c7d;">❌ Noto'g'ri</button>
-      <button class="isco-fb" onclick="iscoFilter('ok',this)" style="border-color:#00e5a033;color:#00e5a0;">✅ To'g'ri</button>
+      <button class="isco-fb on" onclick="iscoFilt('all',this)">Hammasi</button>
+      <button class="isco-fb" onclick="iscoFilt('no',this)">❌ Noto'g'ri</button>
+      <button class="isco-fb" onclick="iscoFilt('ok',this)">✅ To'g'ri</button>
     </div>
-    <div id="isco-answers"></div>
-    <div id="isco-foot"><button onclick="document.getElementById('isco-modal').classList.remove('open')">✕ Yopish</button></div>
+    <div id="isco-list"></div>
+    <div id="isco-foot">
+      <button class="isco-close-btn" onclick="document.getElementById('isco-modal').classList.remove('open')">✕ Yopish</button>
+    </div>
   </div>
 </div>
-<button id="isco-prev-btn" onclick="iscoShowModal()">📊 Natijani ko'rish</button>
+<button id="isco-float"></button>
 
 <script>
 (function(){
-  var iscoData = [];
-  var iscoFilter_ = 'all';
+  var DATA = [];
+  var FILT = 'all';
 
-  window.iscoFilter = function(type, btn){
-    iscoFilter_ = type;
+  window.iscoFilt = function(f, btn){
+    FILT = f;
     document.querySelectorAll('.isco-fb').forEach(function(b){b.classList.remove('on');});
     btn.classList.add('on');
-    iscoRender();
+    render();
   };
+
+  function render(){
+    var list = document.getElementById('isco-list');
+    if(!list) return;
+    var d = DATA.filter(function(r){
+      if(FILT==='ok') return r.isCorrect;
+      if(FILT==='no') return !r.isCorrect;
+      return true;
+    });
+    if(d.length===0){ list.innerHTML='<div style="text-align:center;padding:30px;color:#5a6080;font-family:sans-serif">Hech narsa topilmadi</div>'; return; }
+    list.innerHTML = d.map(function(r){
+      return '<div class="ir '+(r.isCorrect?'ok':'no')+'">'+
+        '<div class="ir-n">'+(r.question)+'</div>'+
+        '<div class="ir-d">'+
+          '<div class="ir-y">'+(r.isCorrect?'✅':'❌')+' '+(r.userAnswer||'—')+'</div>'+
+          (!r.isCorrect&&r.correctAnswer?'<div class="ir-c">To\'g\'ri: <b>'+r.correctAnswer+'</b></div>':'')+
+        '</div></div>';
+    }).join('');
+  }
+
+  function updateStats(){
+    var ok=DATA.filter(function(r){return r.isCorrect;}).length;
+    var no=DATA.filter(function(r){return !r.isCorrect;}).length;
+    document.getElementById('ist-ok').textContent='✅ '+ok+" to'g'ri";
+    document.getElementById('ist-no').textContent='❌ '+no+" noto'g'ri";
+    document.getElementById('ist-tot').textContent='📝 '+DATA.length+' savol';
+  }
+
+  function readFromTable(){
+    var rows = document.querySelectorAll('#result-details tbody tr');
+    var arr = [];
+    rows.forEach(function(row){
+      var cells = row.querySelectorAll('td');
+      if(cells.length>=4){
+        arr.push({
+          question: cells[0].textContent.trim(),
+          userAnswer: cells[1].textContent.trim(),
+          correctAnswer: cells[2].textContent.trim(),
+          isCorrect: cells[3].classList.contains('result-correct')
+        });
+      }
+    });
+    return arr;
+  }
+
+  function showModal(scoreText){
+    var fresh = readFromTable();
+    if(fresh.length>0) DATA = fresh;
+    var s = scoreText || document.getElementById('score-summary')?.textContent?.trim() || '—';
+    document.getElementById('isco-score-big').textContent = s;
+    updateStats(); render();
+    document.getElementById('isco-modal').classList.add('open');
+    // Save to Firebase via parent
+    try {
+      window.parent.postMessage({type:'ISCO_TEST_RESULT', score:s, answers:DATA}, '*');
+    } catch(e){}
+  }
+  window._iscoShow = showModal;
+
+  // Watch result-modal becoming visible (this is when deliverTest() finishes)
+  var obs = new MutationObserver(function(muts){
+    muts.forEach(function(m){
+      if(m.type==='attributes' && m.attributeName==='style'){
+        var modal = document.getElementById('result-modal');
+        if(modal && modal.style.display==='flex'){
+          setTimeout(function(){
+            showModal();
+          }, 300);
+        }
+      }
+    });
+  });
+  document.addEventListener('DOMContentLoaded', function(){
+    var modal = document.getElementById('result-modal');
+    if(modal) obs.observe(modal, {attributes:true, attributeFilter:['style']});
+  });
+
+  // Restore previous session
+  var prev = ${savedAnswers};
+  var prevScore = "${savedScore}";
+  if(prev && prev.length>0){
+    DATA = prev.map(function(r){
+      return {
+        question: r.question||r.num||'?',
+        userAnswer: r.userAnswer||r.your||'—',
+        correctAnswer: r.correctAnswer||r.answer||'',
+        isCorrect: r.isCorrect!==undefined ? r.isCorrect : !!r.correct
+      };
+    });
+    updateStats(); render();
+    var fb = document.getElementById('isco-float');
+    if(fb){
+      fb.textContent = '📊 Oldingi natija: '+prevScore;
+      fb.style.display = 'block';
+      fb.onclick = function(){ showModal(prevScore); };
+    }
+  }
+})();
+</script>`;
+    return html.replace('</body>', script + '</body>');
+  };;
 
   function iscoRender(){
     var list = document.getElementById('isco-answers');
