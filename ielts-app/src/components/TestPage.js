@@ -381,7 +381,7 @@ function ActiveTest({ test, color, icon, label, user, userProfile, savedResult, 
 
   // Restore previous session
   var prev = ${safeAnswers};
-  var prevScore = `${safeScore}`;
+  var prevScore = ${JSON.stringify(safeScore)};
   if(prev && prev.length>0){
     DATA = prev.map(function(r){
       return {
