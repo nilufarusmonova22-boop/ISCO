@@ -234,9 +234,11 @@ function ActiveTest({ test, color, icon, label, user, userProfile, savedResult, 
 
   // Inject saved answers + result overlay into HTML
   const injectHTML = (html) => {
-    const savedAnswers = savedResult ? JSON.stringify(savedResult.answers || []) : '[]';
-    const savedScore = savedResult ? (savedResult.score || '') : '';
+    // savedAnswers handled via safeAnswers
+    // savedScore handled via safeScore
 
+    const safeAnswers = JSON.stringify(savedResult?.answers || []).replace(/</g, "\u003c");
+    const safeScore = (savedResult?.score || "").replace(/`/g, "");
     const script = `
 <style>
 #isco-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:99999;align-items:center;justify-content:center;padding:16px;}
@@ -378,8 +380,8 @@ function ActiveTest({ test, color, icon, label, user, userProfile, savedResult, 
   });
 
   // Restore previous session
-  var prev = ${savedAnswers};
-  var prevScore = "${savedScore}";
+  var prev = ${safeAnswers};
+  var prevScore = `${safeScore}`;
   if(prev && prev.length>0){
     DATA = prev.map(function(r){
       return {
@@ -480,28 +482,7 @@ function ActiveTest({ test, color, icon, label, user, userProfile, savedResult, 
   setTimeout(hookDeliver, 1000);
   setTimeout(hookDeliver, 3000);
 
-  // Restore saved answers from previous session
-  var prev = ${savedAnswers};
-  var prevScore = "${savedScore}";
-  if(prev && prev.length > 0){
-    iscoData = prev.map(function(r){
-      return {
-        question: r.question || r.num,
-        userAnswer: r.userAnswer || r.your || '—',
-        correctAnswer: r.correctAnswer || r.answer || '',
-        isCorrect: r.isCorrect !== undefined ? r.isCorrect : r.correct
-      };
-    });
-    document.getElementById('isco-big-score').textContent = prevScore;
-    iscoShowStats();
-    iscoRender();
-    // Show "Natijani ko'rish" button
-    var pb = document.getElementById('isco-prev-btn');
-    if(pb){
-      pb.textContent = '📊 Oldingi natija: ' + prevScore;
-      pb.style.display = 'block';
-    }
-  }
+
 
   // Also hook "My Results" button after deliver clones it
   var obs = new MutationObserver(function(){
