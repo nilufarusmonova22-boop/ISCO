@@ -167,11 +167,7 @@ export default function TestPage({ type, isTeacher, user, userProfile }) {
                 <button onClick={() => setActiveTest(test)} style={{ background: COLOR, border: 'none', borderRadius: 9, padding: '9px 18px', color: '#000', fontFamily: 'Syne', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer' }}>
                   {result ? '🔄 Qayta' : '▶ Boshlash'}
                 </button>
-                {result && Array.isArray(result.answers) && result.answers.length > 0 && (
-                  <button onClick={(e) => { e.stopPropagation(); setViewResult({ result, test }); }} style={{ background: COLOR + '22', border: '1px solid ' + COLOR + '66', borderRadius: 8, padding: '7px 12px', color: COLOR, cursor: 'pointer', fontSize: '0.78rem', fontFamily: 'Syne', fontWeight: 700, whiteSpace: 'nowrap' }}>
-                    📊 See Results
-                  </button>
-                )}
+
                 {isTeacher && <button onClick={(e) => { e.stopPropagation(); deleteTest(test.id); }} style={{ background: 'none', border: '1px solid #ff5c7d55', borderRadius: 8, padding: '5px 10px', color: '#ff5c7d', cursor: 'pointer', fontSize: '0.75rem' }}>🗑 O'chir</button>}
               </div>
             </div>
@@ -361,9 +357,9 @@ function ActiveTest({ test, color, icon, label, user, userProfile, savedResult, 
           {score && <span style={{ background: color + '22', border: '1px solid ' + color + '55', borderRadius: 6, padding: '2px 8px', color: color, fontSize: '0.72rem', fontFamily: 'Syne', fontWeight: 700 }}>✓ {score}</span>}
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
-          {answers.length > 0 && (
-            <button onClick={() => setShowAnswers(true)} style={{ background: color + '22', border: '1px solid ' + color + '55', borderRadius: 8, padding: '6px 12px', color: color, cursor: 'pointer', fontFamily: 'Syne', fontWeight: 700, fontSize: '0.78rem' }}>
-              📊 Natija
+          {(answers.length > 0 || (Array.isArray(savedResult?.answers) && savedResult.answers.length > 0)) && (
+            <button onClick={() => setShowAnswers(true)} style={{ background: color, border: 'none', borderRadius: 8, padding: '7px 14px', color: '#000', cursor: 'pointer', fontFamily: 'Syne', fontWeight: 800, fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
+              📊 See Results
             </button>
           )}
           <span style={{ fontSize: '0.72rem', color: '#5a6080' }}>{userProfile?.name}</span>
@@ -372,11 +368,8 @@ function ActiveTest({ test, color, icon, label, user, userProfile, savedResult, 
       </div>
 
       {savedResult && (
-        <div style={{ background: '#1a2e1a', borderBottom: '1px solid #00e5a033', padding: '6px 16px', fontSize: '0.78rem', color: '#00e5a0', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span>📊 Oldingi natija: <strong>{savedResult.score}</strong></span>
-          {Array.isArray(savedResult.answers) && savedResult.answers.length > 0 && (
-            <button onClick={() => setShowAnswers(true)} style={{ background: 'none', border: '1px solid #00e5a055', borderRadius: 6, padding: '3px 10px', color: '#00e5a0', cursor: 'pointer', fontSize: '0.75rem' }}>Ko'rish →</button>
-          )}
+        <div style={{ background: '#1a2e1a', borderBottom: '1px solid #00e5a033', padding: '5px 16px', fontSize: '0.75rem', color: '#00e5a0', flexShrink: 0 }}>
+          Oxirgi natija: <strong>{savedResult.score}</strong> — qayta topshirishingiz mumkin
         </div>
       )}
 
