@@ -96,6 +96,7 @@ export default function TestPage({ type, isTeacher, user, userProfile }) {
   }
 
   return (
+    <>
     <div style={{ maxWidth: 900, margin: '0 auto', padding: '28px 20px' }}>
       <div style={{ background: 'linear-gradient(135deg,#0a1018,#111824)', border: '1px solid ' + COLOR + '33', borderRadius: 18, padding: '26px 24px', marginBottom: 24, position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: -20, right: -10, fontSize: 90, opacity: 0.05 }}>{ICON}</div>
@@ -179,7 +180,6 @@ export default function TestPage({ type, isTeacher, user, userProfile }) {
       </div>
     </div>
 
-    {/* Result viewer modal */}
     {viewResult && (
       <ResultModal
         result={viewResult.result}
@@ -190,6 +190,7 @@ export default function TestPage({ type, isTeacher, user, userProfile }) {
         onClose={() => setViewResult(null)}
       />
     )}
+    </>
   );
 }
 
