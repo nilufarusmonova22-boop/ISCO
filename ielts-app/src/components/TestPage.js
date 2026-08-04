@@ -241,6 +241,20 @@ function ActiveTest({ test, color, icon, label, user, userProfile, savedResult, 
     const savedSc = savedResult?.score ? String(savedResult.score) : '';
 
     // Build the inject script as a plain string (no template literals inside)
+    const antiCheat = `
+<meta name="translate" content="no">
+<style>
+  * { -webkit-user-select: none !important; -moz-user-select: none !important; -ms-user-select: none !important; user-select: none !important; }
+  input, textarea, select { -webkit-user-select: text !important; user-select: text !important; }
+</style>
+<script>
+  document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+  document.addEventListener('selectstart', function(e){ 
+    if(!['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) e.preventDefault(); 
+  });
+  document.addEventListener('copy', function(e){ e.preventDefault(); });
+</script>`;
+
     const injectScript = [
       '<style>',
       '#im{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:99999;align-items:center;justify-content:center;padding:16px}',
@@ -357,21 +371,13 @@ function ActiveTest({ test, color, icon, label, user, userProfile, savedResult, 
           {score && <span style={{ background: color + '22', border: '1px solid ' + color + '55', borderRadius: 6, padding: '2px 8px', color: color, fontSize: '0.72rem', fontFamily: 'Syne', fontWeight: 700 }}>✓ {score}</span>}
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
-          {(answers.length > 0 || (Array.isArray(savedResult?.answers) && savedResult.answers.length > 0)) && (
-            <button onClick={() => setShowAnswers(true)} style={{ background: color, border: 'none', borderRadius: 8, padding: '7px 14px', color: '#000', cursor: 'pointer', fontFamily: 'Syne', fontWeight: 800, fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
-              📊 See Results
-            </button>
-          )}
+
           <span style={{ fontSize: '0.72rem', color: '#5a6080' }}>{userProfile?.name}</span>
           <button onClick={onClose} style={{ background: '#2e1a1a', border: '1px solid #ff5c7d', borderRadius: 7, padding: '6px 13px', color: '#ff5c7d', cursor: 'pointer', fontFamily: 'Syne', fontWeight: 700, fontSize: '0.82rem' }}>✕</button>
         </div>
       </div>
 
-      {savedResult && (
-        <div style={{ background: '#1a2e1a', borderBottom: '1px solid #00e5a033', padding: '5px 16px', fontSize: '0.75rem', color: '#00e5a0', flexShrink: 0 }}>
-          Oxirgi natija: <strong>{savedResult.score}</strong> — qayta topshirishingiz mumkin
-        </div>
-      )}
+
 
       <iframe ref={iframeRef} srcDoc={buildSrcDoc()} style={{ flex: 1, border: 'none', width: '100%' }} title={test.title} sandbox="allow-scripts allow-same-origin allow-forms" />
 
