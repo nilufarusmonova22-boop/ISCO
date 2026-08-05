@@ -6,6 +6,7 @@ import AuthPage from './components/AuthPage';
 import Dashboard from './components/Dashboard';
 import VocabPage from './components/VocabPage';
 import StoryPage from './components/StoryPage';
+import WritingPage from './components/WritingPage';
 import TestPage from './components/TestPage';
 import HomeworkPage from './components/HomeworkPage';
 import ProfilePage from './components/ProfilePage';
@@ -167,7 +168,7 @@ export default function App() {
           {page==='vocab' && <VocabPage isAdmin={isAdmin} />}
           {page==='listening' && <TestPage type="listening" isTeacher={isAdmin} user={user} userProfile={userProfile} />}
           {page==='reading' && <TestPage type="reading" isTeacher={isAdmin} user={user} userProfile={userProfile} />}
-          {page==='writing' && <StoryPage isAdmin={isAdmin} user={user} userProfile={userProfile} />}
+          {page==='writing' && <WritingPage isAdmin={isAdmin} user={user} userProfile={userProfile} />}
           {page==='homework' && <HomeworkPage isTeacher={canUploadHomework} user={user} userProfile={userProfile} />}
           {page==='profile' && <ProfilePage user={user} userProfile={userProfile} />}
         </div>

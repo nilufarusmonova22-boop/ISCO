@@ -157,7 +157,7 @@ export default function TestPage({ type, isTeacher, user, userProfile }) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5, flexWrap: 'wrap' }}>
                   <span style={{ background: COLOR + '22', border: '1px solid ' + COLOR + '55', borderRadius: 5, padding: '2px 7px', color: COLOR, fontSize: '0.7rem', fontFamily: 'Syne', fontWeight: 700 }}>Test {tests.length - i}</span>
                   {test.date && <span style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>{test.date}</span>}
-                  {result && <span style={{ background: '#00e5a022', border: '1px solid #00e5a055', borderRadius: 5, padding: '2px 7px', color: '#00e5a0', fontSize: '0.7rem', fontFamily: 'Syne', fontWeight: 700 }}>✓ {result.score}</span>}
+                  {result && <span style={{ background: '#00e5a022', border: '1px solid #00e5a055', borderRadius: 5, padding: '2px 7px', color: '#00e5a0', fontSize: '0.7rem', fontFamily: 'Syne', fontWeight: 700 }}>✅ {result.score}</span>}
                 </div>
                 <div style={{ fontFamily: 'Syne', fontSize: '1rem', fontWeight: 700 }}>{test.title}</div>
                 {test.description && <div style={{ color: 'var(--muted)', fontSize: '0.82rem', marginTop: 2 }}>{test.description}</div>}
@@ -223,17 +223,58 @@ function ActiveTest({ test, color, icon, label, user, userProfile, savedResult, 
   }, [blocked]);
 
   useEffect(() => {
+    // Listen via postMessage (works on most browsers)
     const handler = async (e) => {
       if (e.data?.type === 'ISCO_RESULT') {
         const s = e.data.score;
-        const ans = e.data.answers || [];
-        setScore(s);
-        setAnswers(ans);
-        await onSave(s, ans);
+        const ans = Array.isArray(e.data.answers) ? e.data.answers : [];
+        if (s && s !== '-') {
+          setScore(s);
+          if (ans.length > 0) setAnswers(ans);
+          await onSave(s, ans);
+        }
       }
     };
     window.addEventListener('message', handler);
-    return () => window.removeEventListener('message', handler);
+
+    // Fallback: poll iframe every 2s for result (for browsers where postMessage fails)
+    const pollInterval = setInterval(() => {
+      try {
+        const iframe = iframeRef.current;
+        if (!iframe || !iframe.contentDocument) return;
+        const doc = iframe.contentDocument;
+        // Check if deliver button changed to "My Results" (means test submitted)
+        const deliverBtn = doc.getElementById('deliver-button');
+        const scoreEl = doc.getElementById('score-summary');
+        if (scoreEl && deliverBtn && deliverBtn.textContent.includes('Results')) {
+          const scoreText = scoreEl.textContent.trim();
+          if (scoreText && scoreText !== '-') {
+            // Read answers from result table
+            const rows = doc.querySelectorAll('#result-details tbody tr');
+            const ans = [];
+            rows.forEach(row => {
+              const cells = row.querySelectorAll('td');
+              if (cells.length >= 4) {
+                ans.push({
+                  question: cells[0].textContent.trim(),
+                  userAnswer: cells[1].textContent.trim(),
+                  correctAnswer: cells[2].textContent.trim(),
+                  isCorrect: cells[3].classList.contains('result-correct')
+                });
+              }
+            });
+            setScore(scoreText);
+            if (ans.length > 0) setAnswers(ans);
+            onSave(scoreText, ans);
+          }
+        }
+      } catch(e) { /* cross-origin, skip */ }
+    }, 2000);
+
+    return () => {
+      window.removeEventListener('message', handler);
+      clearInterval(pollInterval);
+    };
   }, [onSave]);
 
   const buildSrcDoc = () => {
